@@ -1,10 +1,10 @@
-# Copyright (C) 2003, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
 
 use strict;
 package Data::Tabular;
 use Spreadsheet::WriteExcel::Utility qw(:dates);
 
-our $VERSION = '0.21-eo';
+our $VERSION = '0.22';
 
 use Carp qw (croak);
 
@@ -81,7 +81,7 @@ sub headers
 {
     my $self = shift;
 
-    wantarray ? @{$self->{headers} || []} : $self->{headers};
+    $self->{extra_table}->headers;
 }
 
 sub extra_headers
@@ -142,6 +142,13 @@ sub grouped
     my $self = shift;
 
     $self->{grouped_table};
+}
+
+sub title
+{
+    my ($self, $column, $title) = @_;
+
+    $self->{output}->{columns}->{$column}->{title} = $title;
 }
 
 sub _extra_package
@@ -272,13 +279,13 @@ type of ouput.  Currently HTML and Excel spreadsheets are supported.
 
 Of these only the data section is requied.
 
-=item Data Section
+=head1 Data Section
 
 The Data section consisits of two pieces of information a list of headers names and 
 a 2 dimintional array of data.
 
 
-=item EXAMPLES
+=head1 EXAMPLES
 
  my $st = $dbh->prepare('Select * from my_test_table');
  my $data = selectall_arrayref($st);
@@ -289,7 +296,8 @@ a 2 dimintional array of data.
         headers => $headers,
     );
 
+=head1 AUTHOR
 
-
+"G. Allen Morris III" <gam3@gam3.net>
 
 =cut

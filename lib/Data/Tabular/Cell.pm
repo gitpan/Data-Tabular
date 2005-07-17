@@ -67,9 +67,9 @@ die 'XXXXX';
 	    }
 	}
     } else {
-        $ret;
+#        $ret;
     }
-    length($ret) ? $ret : '&nbsp';
+    length($ret) ? $ret : '&nbsp';	# This is wrong FIXME
 }
 
 sub html_attribute_string
@@ -113,7 +113,7 @@ warn 'no attributes';
 
     my $ret = '';  # FIXME
     for my $attribute (sort keys %$attributes) {
-        next unless length $attributes->{$attribute};
+        next unless defined($attributes->{$attribute});
 	$ret .= qq| $attribute="| . $attributes->{$attribute} . qq|"|;
     }
 

@@ -1,5 +1,7 @@
 use strict;
+
 package Data::Tabular::Table::Group;
+
 use base 'Data::Tabular::Table';
 
 use Data::Tabular::Group::Interface;
@@ -16,7 +18,6 @@ sub row_count
 
     1;
 }
-
 
 sub sum_list
 {
@@ -43,7 +44,7 @@ sub sum
         html => $sum,
         xls => $formula,
     };
-# FIXME : This needs to be a facny type, so that Extra can add and subtract elements.
+# FIXME : This needs to be a fancy type, so that Extra can add and subtract elements.
     $ret = $sum;
     $self->{memo}->{$column_name} = $ret;
     $ret;

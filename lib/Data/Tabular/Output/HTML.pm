@@ -32,6 +32,7 @@ sub output
 sub columns
 {
     my $self = shift;
+
     $self->{table}->columns;
 }
 
@@ -79,7 +80,7 @@ my $t0 = [gettimeofday];
 	my $attribute = $col->html_attribute_string;
         $ret .= " <colgroup$attribute>\n";
     }
-warn 'columns: ', tv_interval($t0);
+#warn 'columns: ', tv_interval($t0);
     my @table;
     for my $row ($self->rows()) {
 	my $attribute = $row->html_attribute_string();

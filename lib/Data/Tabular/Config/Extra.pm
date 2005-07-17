@@ -8,4 +8,11 @@ sub new
     $self;
 }
 
+sub output
+{
+    my $ret = $_[0]->{output};
+    $_[0]->{output} = $_[1] if $_[1];
+    $ret;
+}
+
 1;

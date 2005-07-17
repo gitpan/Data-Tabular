@@ -83,15 +83,15 @@ sub extra_column
     }
     if (my $t = ref($ret)) {
         if ($t eq 'HASH') {
-            $ret;
+#            $ret;
         } elsif ($t eq 'ARRAY') {
-	    $t;
+die	    $t;
         } elsif ($t eq 'SCALAR') {
-	    $t;
+die	    $t;
         } elsif ($t eq 'CODE') {
-	    $t;
+die	    $t;
 	} else {
-	    $ret;
+#	    $ret;
 	}
     }
     

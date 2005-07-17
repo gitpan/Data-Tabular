@@ -9,7 +9,15 @@ sub new
     my $caller = shift;
     my $self = $caller->SUPER::new(@_);
 
+    $self->{_all_headers} = [ (@{$self->{data}->{headers} || []}, sort keys(%{$self->extra->{columns} || {}})) ];
+
     $self;
+}
+
+sub extra
+{
+    my $self = shift;
+    $self->{extra};
 }
 
 sub is_extra
@@ -20,13 +28,19 @@ sub is_extra
     grep(/^$column_name$/, @{$self->extra->{headers}});
 }
 
+sub headers
+{
+    my $self = shift;
+    @{$self->{_all_headers}};
+}
+
 sub all_headers
 {
     my $self = shift;
 
-    my @headers = @{[ (@{$self->{data}->{headers} || []}, @{$self->extra->{headers} || []}) ]};
+    $self->{_all_headers} = [ (@{$self->{data}->{headers} || []}, sort keys(%{$self->extra->{columns} || {}})) ];
 
-    @headers;
+    @{$self->{_all_headers}};
 }
 
 sub row_package
@@ -65,6 +79,39 @@ sub get_row_column
     } else {
 	$self->{data}->{rows}->[$row][$column];
     }
+}
+
+sub extra_column
+{
+    my $self = shift;
+    my $row = shift;
+    my $key = shift;
+    my $ret = 'N/A';
+
+    my $extra = $self->{extra};
+
+    return undef unless $row;
+
+    my $offset = $self->header_offset($key);
+
+    my $x = $self->extra_package->new(row => $row, table => $self);
+
+    if (ref($extra->{$key}) eq 'CODE') {
+	eval {
+	    $ret = $extra->{$key}->($x);
+	};
+	if ($@) {
+	    die $@;
+	}
+    } else {
+	die 'only know how to deal with code';
+    }
+    die $ret;
+    if (ref($ret)) {
+        die if (ref($ret) eq 'HASH');
+    }
+
+    $ret;
 }
 
 1;

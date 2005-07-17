@@ -57,12 +57,6 @@ sub output
     shift->{output};
 }
 
-sub extra
-{
-    shift->{extra};
-}
-
-
 sub headers
 {
     my $self = shift;

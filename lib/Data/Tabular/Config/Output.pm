@@ -5,17 +5,12 @@ sub new
 {
     my $caller = shift;
     my $class = ref($caller) || $caller;
+
     my $self = bless { @_ }, $class;
     $self->{caller} = join(':', caller) ;
 
     $self->{xls} ||= {};
     $self->{html} ||= {};
-    my $arglist = qw (
-        html
-	xls
-	headers
-	columns
-    );
 
     die 'No column list' unless $self->column_list;
     $self;
