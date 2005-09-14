@@ -6,6 +6,8 @@ sub new
     my $class = shift;
     my $self = bless { @_ }, $class;
 
+    die 'A group field is required' unless defined $self->{group};
+
     $self;
 }
 
@@ -51,12 +53,14 @@ sub totals
     require Data::Tabular::Row::Totals;
 
     Data::Tabular::Row::Totals->new(
-	text => $args->{text},
+	text => $args->{title},
 	table => $self->{group},
-        sum_list => $self->{group}->{group}->{sum},
+        sum_list => $self->{group}->{group}->{sum_list},
         extra => $self->{group}->{group}->{extra},
     );
 }
+
+*sum = \&totals;
 
 sub averages
 {
@@ -73,25 +77,6 @@ sub averages
     );
 }
 
-sub avg
-{
-    my $self = shift;
-    my $args = { @_ };
-    $self->averages(
-	text => $args->{title},
-    );
-}
-
-sub sum
-{
-    my $self = shift;
-    my $args = { @_ };
-    require Data::Tabular::Row::Totals;
-    Data::Tabular::Row::Totals->new(
-	text => $args->{title},
-	table => $self->{group},
-    );
-}
 
 1;
 __END__
@@ -106,7 +91,7 @@ Data::Tabular::Group::Interface - Object that is passed into I<group_by> methods
        groups => [
           {
 	     pre => sub {
-	          my $self = shift;    # This is a Data::Tabular::Group::Interface object
+	          my $self = shift;    # This is a C<Data::Tabular::Group::Interface> object
 	     },
 	  }
        ],
@@ -122,52 +107,70 @@ methods and output methods. Access methods let the users groups methods
 access information about the current table and the output methods that
 return the rows that are being inserted into the table. 
 
+=head2 Constructor
+
+=over 
+
+=item new()
+
+The user should never need to call the constructor.
+
+=back
+
 =head2 Access Methods
+
+=over 
 
 =item get([column name])
 
-This method returns the value of the column given my I<column name>.  This column should
+This method returns the value of the column given by I<column name>.  This column should
 be a grouped column or the value will unpredictable (one of the values from the group).
 
 =item count
 
 This give the number of input rows in the current group.
 
+=back
+
 =head2 Output Methods
+
+=over 2
 
 =item header(text => 'header text')
 
 The header method returns a header row that will span the complete table.
 
-=over 2
+=back
 
 =head3 Arguments
+
+=over 2
 
 =item text
 
 The text that is printed in the header.  Often get() and count() are used
 to build this string.
 
-=back
-
 =item titles
 
 The titles method returns a row of titles. Normally all tables will use
 this method at least once.
 
-=over 4
+=item totals/sum
 
-=item 
+This method return a row with the columns listed in the I<sum array> summed.
 
 =back
 
-=item totals
-
-This method return a row with the columns listed in the sum array summed.
+=over
 
 =item averages
 
-This is simular to the totals method, but each value is divied by the
+This is similar to the totals method, but each value is divided by the
 number of input rows before being output.
+
+=over
+
+=back
 
 =cut

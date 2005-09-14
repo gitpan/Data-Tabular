@@ -30,52 +30,30 @@ sub new
     }
     $self = { %$old, %$args };
     bless $self, $class;
-    unless ($self->output_config) {
-        $self->output_config(Data::Tabular::Config::Output->new(headers => [ $self->all_headers ]));
-    }
-
-    die 'Need output' unless $self->output_config;
 
     die unless $self->{data};
 
     $self;
 }
 
-sub output_config
-{
-    my $self = shift;
-    my $ret = $self->{output};
-    die 'Usage: output_config(output_congif)' if @_ > 1;
-    if (@_) {
-	$self->{output} = shift;
-    }
-    $ret;
-}
-
-sub output
-{
-    shift->{output};
-}
-
 sub headers
 {
     my $self = shift;
 
-    $self->output_config->headers;
+    $self->{headers};
 }
 
 sub columns
 {
     my $self = shift;
 
-    my @headers = $self->output_config->headers;
+    my @headers = $self->headers;
 
     my $x = 0;
     map({
 	Data::Tabular::Column->new(
 	    offset => $x++,
 	    name => $_,
-	    output => $self->output, 
 	    );
 	} @headers);
 }
@@ -86,9 +64,7 @@ sub title
     my $column_name = shift;
     my $title = q|/|. $column_name . q|/|;
 
-    if (my $output = $self->output_config) {
-        $title = $output->title($column_name);
-    }
+warn "FIXME";
     $title;
 }
 
@@ -110,44 +86,6 @@ sub header_offset
     $ret;
 }
 
-sub html
-{
-    my $self = shift;
-
-    require Data::Tabular::Output::HTML;
-
-    return Data::Tabular::Output::HTML->new(table => $self, @_);
-}
-
-sub xls
-{
-    my $self = shift;
-    require Data::Tabular::Output::XLS;
-    my $args = {
-        row_offset => 0,
-        column_offset => 0,
-	table => $self,
-	output => $self->output,
-    };
-    if (my $ref = ref($_[0])) {
-        $args->{workbook} = shift;
-        $args->{worksheet} = shift;
-        $args->{row_offset} = shift;
-        $args->{column_offset} = shift;
-    } else {
-        die ref($_[0]);
-    }
-
-    return Data::Tabular::Output::XLS->new(%$args);
-}
-
-sub xml
-{
-    my $self = shift;
-    require Data::Tabular::Output::XML;
-
-    return Data::Tabular::Output::XML->new(@_);
-}
 
 1;
 __END__
@@ -162,10 +100,51 @@ This object is used by Data::Tabular to hold a table.
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+=head2 Constructor
 
-=over 4
+=over
 
 =item new
+
+This creates a table object. It requires a header and a data argument.
+
+=back
+
+=head2 Control Methods
+
+=over
+
+=item title
+
+=item columns
+
+=item headers
+
+=item header_offset
+
+
+=back
+
+=head2 Display Methods
+
+=over
+
+=item html
+
+returns html representation of the table;
+
+=item xml
+
+returns xml representation of the table;
+
+=item xls
+
+returns xls representation of the table;
+
+=item txt
+
+returns text representation of the table;
+
+=back
 
 =cut

@@ -2,9 +2,8 @@
 
 use strict;
 package Data::Tabular;
-use Spreadsheet::WriteExcel::Utility qw(:dates);
 
-our $VERSION = '0.22';
+our $VERSION = '0.23';
 
 use Carp qw (croak);
 
@@ -22,7 +21,8 @@ sub new
     my $self = bless { @_ }, $class;
 
     my $output = Data::Tabular::Config::Output->new(
-        headers => $self->{headers},
+        headers => [ @{$self->{headers}}, 
+	    $self->{extra_headers} ? @{$self->{extra_headers}} : keys %{$self->{extra}} ],
 	%{$self->{output}},
     );
     my $extra  = Data::Tabular::Config::Extra->new(
@@ -53,27 +53,26 @@ sub new
 	 Data::Tabular::Table::Extra->new(
             table => $self->{data_table},
 	    extra => $extra,
-	    output => $output,
 	);
     if (my $group_by = $self->{group_by}) {
         if (ref $group_by eq 'HASH') {
 	    $self->{grouped_table} = Data::Tabular::Group->new(
 		table => $self->{extra_table},
-		output => $output,
 		title => $self->{title} || 1,
 		%$group_by
 	    );
 	}
     } else {
-	$self->{grouped_table} = Data::Tabular::Group->new(table => $self->{extra_table}, grouped => [ {} ]);
+	$self->{grouped_table} = $self->{extra_table};
     }
+    $self->{output_config} = $output;
     $self;
 }
 
-sub all_headers
+sub _all_headers
 {
     my $self = shift;
-
+die;
     wantarray ? @{$self->{_all_headers} || []} : $self->{_all_headers};
 }
 
@@ -84,19 +83,21 @@ sub headers
     $self->{extra_table}->headers;
 }
 
-sub extra_headers
+sub _extra_headers
 {
     my $self = shift;
 
+die;
     wantarray ? @{$self->{extra_headers} || []} 
               : $self->{extra_headers};
 }
 
-sub header_offset
+sub _header_offset
 {
     my $self = shift;
     my $column = shift;
     my $ret = $self->{_header_off}->{$column};
+die;
     croak "column '$column' not found in [",
           join(" ",
 	      sort keys(%{$self->{_header_off}})
@@ -104,36 +105,44 @@ sub header_offset
     $ret;
 }
 
-sub row_count
+sub _row_count
 {
     my $self = shift;
+die;
     scalar @{$self->data};
 }
 
-sub col_count
+sub _col_count
 {
     my $self = shift;
+die;
     scalar @{$self->{_all_headers}};
 }
 
-sub output_config
+sub _output
 {
     my $self = shift;
-
     $self->{output_config};
 }
 
-sub data
+sub _output_config
 {
     my $self = shift;
+die;
+    $self->{output_config};
+}
 
+sub _data
+{
+    my $self = shift;
+die;
     $self->{data_table};
 }
 
-sub extra
+sub _extra
 {
     my $self = shift;
-
+die;
     $self->{extra_table};
 }
 
@@ -154,6 +163,7 @@ sub title
 sub _extra_package
 {
     require Data::Tabular::Extra;
+die;
     'Data::Tabular::Extra';
 }
 
@@ -164,6 +174,7 @@ sub _extra_column
     my $key = shift;
     my $ret = 'N/A';
 
+die;
     my $extra = $self->{extra};
 
     return undef unless $row;
@@ -185,13 +196,13 @@ sub _extra_column
     $ret;
 }
 
-sub _extra
+sub __extra
 {
     my $self = shift;
     my $row = shift;
     my $extra_headers = $self->extra_headers;
     my $extra = $self->{extra};
-
+die;
     return undef unless $row;
 
     my $out = [ @$row ];
@@ -217,19 +228,60 @@ sub _extra
 sub html
 {
     my $self = shift;
-    $self->grouped->html(@_);
+
+    require Data::Tabular::Output::HTML;
+
+    return Data::Tabular::Output::HTML->new(
+        table => $self->grouped,
+	output => $self->_output,
+	@_
+    );
 }
 
 sub xls
 {
     my $self = shift;
-    $self->grouped->xls(@_);
+    require Data::Tabular::Output::XLS;
+
+    return Data::Tabular::Output::XLS->new(
+	table => $self->grouped,
+	output => $self->_output,
+	@_);
 }
 
 sub xml
 {
     my $self = shift;
-    $self->grouped->xml(@_);
+    require Data::Tabular::Output::XML;
+
+    return Data::Tabular::Output::XML->new(
+	table => $self->grouped,
+	output => $self->_output,
+	@_);
+}
+
+sub txt 
+{
+    my $self = shift;
+    require Data::Tabular::Output::TXT;
+
+    return Data::Tabular::Output::TXT->new(
+	table => $self->grouped,
+	output => $self->_output,
+	@_
+    );
+}
+
+sub csv 
+{
+    my $self = shift;
+    require Data::Tabular::Output::CSV;
+
+    return Data::Tabular::Output::CSV->new(
+	table => $self->grouped,
+	output => $self->_output,
+	@_
+    );
 }
 
 1;
@@ -246,18 +298,21 @@ Data::Tabular - Handy Table Manipulation and rendering Object
  $table = Data::Tabular->new(
      headers => ['one', 'two'],
      data    => [
-	  ['a', 'b'],
+          ['a', 'b'],
           ['c', 'd']
      ],
      extra_headers => [ 'three' ],
      extra => {
-	 'three' => sub {
-             'bob';
+         'three' => sub {
+             my $self = shift;
+             my $a = $self->get('one');
+             my $b = $self->get('two');
+             $a . $b;
          },
      },
      group_by => {
      },
-     output {
+     output => {
          headers => [ 'three', 'one', 'two' ],
      },
  );
@@ -275,17 +330,92 @@ The extra section. This is a set of named columns that are added to the table.
 The group_by section. This is allows titles, and subtotals to be inserted into table.
 
 The output section.  This allows the output to be formated and rendered for a particular
-type of ouput.  Currently HTML and Excel spreadsheets are supported.
+type of output.  Currently HTML and Excel spreadsheets are supported.
 
-Of these only the data section is requied.
+Of these only the data section is required.
 
 =head1 Data Section
 
-The Data section consisits of two pieces of information a list of headers names and 
-a 2 dimintional array of data.
+The Data section consists of two pieces of information a list of headers names and 
+a 2 dimensional array of data.
 
+=head1 API
+
+=head2 Constructor
+
+=over
+
+=item new
+
+The new method
+
+=back
+
+=head2 Output Control Methods
+
+=over
+
+=item title
+
+Control output titles.
+
+=back
+
+=head2 Accessor Methods
+
+=over
+
+=item data
+
+The data method returns a Data::Table object.
+
+=item extra
+
+The extra method returns a Data::Table::Extra object.
+
+=item grouped
+
+The grouped method returns a Data::Table::Grouped object.
+
+=item headers
+
+The headers method returns the available headers in the
+Data::Table::Extra object. This is the headers from both the data
+section and the extra section. These are the headers that can be in the
+output section.
+
+=back
+
+=head2 Configure Methods
+
+=head2 Display Methods
+
+=over
+
+=item html
+
+returns html representation of the table.
+
+=item xml
+
+returns xml representation of the table.
+
+=item xls
+
+returns xls representation of the table.
+
+=item txt
+
+returns text representation of the table.
+
+=item csv
+
+returns a comma separated representation of the table.
+
+=back
 
 =head1 EXAMPLES
+
 
  my $st = $dbh->prepare('Select * from my_test_table');
  my $data = selectall_arrayref($st);

@@ -55,6 +55,7 @@ sub get_row_column_name
     }
 
     if ($column >= $count) {
+warn caller;
         'Unknown Column '. $column_name;
     } else {
 	$self->{data}->{rows}->[$row][$column];
@@ -71,17 +72,22 @@ sub row_package
 sub rows
 {
     my $self = shift;
-    my @output;
+    my $args = { @_ };
+    my @ret;
+
+croak unless $args->{output};
 
     for (my $row = 0; $row < $self->row_count; $row++) {
-	push(@output, $self->row_package->new(
-	    table => $self,
+	push(@ret, $self->row_package->new(
+	    table => $self,	# FIXME: This is very bad!
 	    input_row => $row,
 	    extra => $self->{extra},
+	    output => $args->{output},
+	    row_id => $row + 1,
 	));
     }
 
-    $self->{rows} = \@output;
+    $self->{rows} = \@ret;
 
     wantarray ? @{$self->{rows}} : $self->{rows};
 }
@@ -99,7 +105,7 @@ This object is used by Data::Tabular to hold a table.
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+=head2 METHODS
 
 =over 4
 

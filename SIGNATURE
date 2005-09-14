@@ -1,0 +1,66 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.44.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 a4ba9a1561d95614e636f9252248afff04be8cb7 Build.PL
+SHA1 4593010f8a00cdedab92d04e587e8522b5e7dbdd Changes
+SHA1 cdc82ef8f9f757339dabfca3020b7e92c5c33d8a MANIFEST
+SHA1 9e66baad2b9418e2ff5af0d67acc0dbdc28f82a9 META.yml
+SHA1 ff70b47fe1ae2633015305e2e6a3a19d3b2d6103 Makefile.PL
+SHA1 2c2a2c6febc02b2dcf7a194fab9e0cc105d3f498 README
+SHA1 70ae0ba4f962a541b0b251abec4a1d370998b38f lib/Data/Tabular.pm
+SHA1 ced1c63a2efae57615b18cc1273b145314b7bfcd lib/Data/Tabular/Cell.pm
+SHA1 13463bd8d3818515aa7fe341d7642275e4feafa5 lib/Data/Tabular/Column.pm
+SHA1 5daa1fba9d5efd68ca3f36c1e860c373ada35d5f lib/Data/Tabular/Config/Extra.pm
+SHA1 db82c90d8ac63ed8b7dfce6a71f2515c367ffe2c lib/Data/Tabular/Config/Output.pm
+SHA1 f34ba13725899bdf4baf3b2a9278927a0399ff49 lib/Data/Tabular/Extra.pm
+SHA1 7ca8996cd7bf77bf5d921903a2750fa9b869c032 lib/Data/Tabular/Group.pm
+SHA1 801c8bf198775c90002c0414a7ddd716a46d7284 lib/Data/Tabular/Group/Interface.pm
+SHA1 cdadf57ef5045cbd2962efe710af4a02b0cbcf9d lib/Data/Tabular/Output.pm
+SHA1 c767377dcb88ff33094d3c5845997c67b787607c lib/Data/Tabular/Output/CSV.pm
+SHA1 3c9a479d4a45e8e46f22d908058cf0a9f9581a0f lib/Data/Tabular/Output/HTML.pm
+SHA1 6300d276eab88307c526072ea503c5529e1651b2 lib/Data/Tabular/Output/TXT.pm
+SHA1 e2d71e9b41b5057545e7c8e007647479133a8078 lib/Data/Tabular/Output/XLS.pm
+SHA1 21c9de23ca581032b4f0cb4c9b08a6e9686e55d5 lib/Data/Tabular/Row.pm
+SHA1 4f771200f24bd6b4cddf9d156d0a2d8ae09c8f7a lib/Data/Tabular/Row/Averages.pm
+SHA1 140e0041624b8a91e3f34e21cba98e34e7069a8f lib/Data/Tabular/Row/Data.pm
+SHA1 0e435e19cdf1ab8414c2897da8a0b8cfdd082d5b lib/Data/Tabular/Row/Extra.pm
+SHA1 014e6f14d09bd57c984c8beb16216c9bb251f9b8 lib/Data/Tabular/Row/General.pm
+SHA1 fe8a9f840d8dbb3dd48df10bbefaf069d0fb7fc1 lib/Data/Tabular/Row/Group.pm
+SHA1 9b1d6c0b1459bf6eeb56bd952182bf88d55ff882 lib/Data/Tabular/Row/Header.pm
+SHA1 5dbcb10138641c4b9f511b5088681535bbd69f31 lib/Data/Tabular/Row/Titles.pm
+SHA1 53cdcfa46164d2a68ad374c8d61914ae867d2f90 lib/Data/Tabular/Row/Totals.pm
+SHA1 630ba5c85b7b6df15f0bce6b06fbfabeb516d14e lib/Data/Tabular/Table.pm
+SHA1 c71a541a8c9688150b67e08d577b2c3174883489 lib/Data/Tabular/Table/Data.pm
+SHA1 f6be291e3c77a8254a9d8029994eac501c29e57e lib/Data/Tabular/Table/Extra.pm
+SHA1 8d13d6c31afdad26e36ca8fdc4e4566a983b8e64 lib/Data/Tabular/Table/Group.pm
+SHA1 a5c5b8d5967d0db790453da6c813009862107c4f t/Data-Tabular.t
+SHA1 627f227cbbd6cfeea14bf058db4b7c90e63c3957 t/cgi.t
+SHA1 abd85da7495183e9e3efa2977db135dd7393a057 t/coverage.t
+SHA1 3ca85dffe36253f8c84f39bd4b2d690f3ff307e4 t/csv.t
+SHA1 f1074a6d45f66edd653dd0f8bc56dc879728c965 t/perl.xls
+SHA1 f8bd63b0fb73e08a69aab235e1996c75e90a21c5 t/pod.t
+SHA1 8958c071098650b9b95a4aac20661b7a0085e4a4 t/spelling.t
+SHA1 58cb3412a6fa50e1a8a2a8ce728bc22aaeb001e3 t/spreadsheet.t
+SHA1 5411b63ac14534430ac7bf2dfbc4b81d3d449a3a t/spreadsheets.t
+SHA1 d0a79b4ac31a7e61e7efdf97dde927c709907793 t/txt.t
+SHA1 ebde5abae592e6901dcb1df326d06568e5f2dfea t/txt_2.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFDKDO+liSr/X1H0FwRAvEZAJwNQEeA8GtY0e7+Vha4Wc+5PPZq5gCg6Fom
+mR+zl/wwrP5Ts6JoGncra8Y=
+=77+t
+-----END PGP SIGNATURE-----

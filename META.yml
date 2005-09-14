@@ -1,16 +1,22 @@
 ---
 name: Data-Tabular
-version: 0.22
+version: 0.23
 author:
   - '"G. Allen Morris III" <gam3@gam3.net>'
 abstract: Handy Table Manipulation and rendering Object
 license: perl
 requires:
   perl: 5.6.0
+recommends:
+  Spreadsheet::WriteExcel: 0
+  Spreadsheet::WriteExcel::Simple: 0
+  Spreadsheet::WriteExcel::Utility: 0
+build_requires:
+  Test::More: 0
 provides:
   Data::Tabular:
     file: lib/Data/Tabular.pm
-    version: 0.22
+    version: 0.23
   Data::Tabular::Cell:
     file: lib/Data/Tabular/Cell.pm
   Data::Tabular::Column:
@@ -27,8 +33,12 @@ provides:
     file: lib/Data/Tabular/Group/Interface.pm
   Data::Tabular::Output:
     file: lib/Data/Tabular/Output.pm
+  Data::Tabular::Output::CSV:
+    file: lib/Data/Tabular/Output/CSV.pm
   Data::Tabular::Output::HTML:
     file: lib/Data/Tabular/Output/HTML.pm
+  Data::Tabular::Output::TXT:
+    file: lib/Data/Tabular/Output/TXT.pm
   Data::Tabular::Output::XLS:
     file: lib/Data/Tabular/Output/XLS.pm
   Data::Tabular::Row:

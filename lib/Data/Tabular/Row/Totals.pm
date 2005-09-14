@@ -14,6 +14,7 @@ sub new
     my $self = $class->SUPER::new(@_);
 
     die unless $self->table;
+    die "Need sum_list" unless $self->{sum_list};
 
     $self;
 }
@@ -21,14 +22,8 @@ sub new
 sub str
 {
     my $self = shift;
+die caller;
     'Row::Total';
-}
-
-sub _headers
-{
-    my $self = shift;
-die;
-    ('_description', @{$self->{sum_list} || []}, @{$self->{extra}->{headers} || []});
 }
 
 sub cells
@@ -36,6 +31,7 @@ sub cells
     my $self = shift;
     my @ret = ();
     my @headers = $self->headers;
+
     my $offset = 0;
     my $hash;
     for my $x ( @{$self->{extra}->{headers} || []} ) {
@@ -48,7 +44,7 @@ sub cells
     my $start = 0;
     for ($start = 0; $start <= $#headers; $start++) {
         my $column_name = $headers[$start];
-	last unless $hash->{$column_name}->{sum};
+	last unless $column_name && $hash->{$column_name} && $hash->{$column_name}->{sum};
     }
 
     my $colspan = 1;
@@ -60,16 +56,16 @@ sub cells
 	    delete $headers[$col];
 	}
     }
-
     $headers[$start] = '_description';
     $hash->{'_description'} = {
        span => $colspan,
     };
 
-    my $colspan = 1;
+    $colspan = 1;
     my $x = 0;
     for (my $col = 0; $col <= $#headers; $col += $colspan || 1) {
         my $column_name = $headers[$col];
+
 	$colspan = $hash->{$column_name}->{span} || 1;
         push(@ret, 
 	    Data::Tabular::Cell->new(
@@ -81,12 +77,14 @@ sub cells
 	); 
 	$x += $colspan;
     }
+
     @ret;
 }
 
 sub sum_list
 {
     my $self = shift;
+
     $self->{sum_list};
 }
 
@@ -102,10 +100,10 @@ sub get_column
     } elsif (grep(m|$reg|, @{$self->sum_list})) {
 	$ret = $self->table->sum($column_name);
     } elsif (grep(m|$reg|, @{$self->{extra}->{headers} || []})) {
-       $ret = $self->extra_column($self, $column_name);
+#       $ret = $self->extra_column($self, $column_name);
+       $ret = "extra($column_name)";
     } else {
-        $ret = 'N/A';
-        $ret = join(' ', caller(3)) . ' ' . $column_name;
+        $ret = 'N/A('. $column_name . ')';
     }
     $ret;
 }
@@ -113,6 +111,7 @@ sub get_column
 sub extra_package
 {
     require Data::Tabular::Extra;
+die;
     'Data::Tabular::Extra';
 }
 
@@ -145,23 +144,27 @@ sub extra_column
 sub attributes
 {
     my $self = shift;
+die;
     $self->[0];
 }
 
 sub hdr
 {
+die;
     1;
 }
 
 sub data
 {
     my $self = shift;
+die;
     wantarray ? @{$self->[1]} : $self->[1];
 }
 
 sub id
 {
     my $self = shift;
+die;
     $self->{row_id} || 'No ID available';
 }
 
@@ -169,6 +172,7 @@ sub cell_html_attributes
 {
     my $self = shift;
     my $cell = shift;
+die;
     {
         align => ($cell->name() eq '_description' ? 'left' : 'right'),
     };

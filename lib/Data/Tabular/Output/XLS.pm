@@ -12,15 +12,16 @@ sub new
     my $self = bless {}, $class;
 
     my $arg_list = {
-        table => {},
+        table => {required => 1},
         output => {},
-        workbook => {},
-	worksheet => {},
+        workbook => {required => 1},
+	worksheet => {required => 1},
 	row_offset => {},
 	column_offset => {},
     };
     for my $arg (keys %$arg_list) {
         $self->{$arg} = $args->{$arg};
+        die "Need $arg" if $arg_list->{$arg}->{required} && !defined($self->{$arg});
 	delete $args->{$arg};
     }
 
@@ -31,10 +32,16 @@ sub new
     $self->render;
 }
 
+sub table
+{
+    my $self = shift;
+    $self->{table};
+}
+
 sub output
 {
     my $self = shift;
-    $self->{output};
+    $self->{output} or $self->table->output;
 }
 
 sub rows
@@ -145,7 +152,6 @@ sub render
 	    size => 8,
 	},
     };
-    my $formats;
     for my $type (keys %{$types}) {
        $formats->{$type} =  $workbook->addformat(%{$types->{$type}});
        $formats->{$type . '_hdr'} =  $workbook->addformat(%{$types->{$type}}, bold => 1, text_wrap => 0);

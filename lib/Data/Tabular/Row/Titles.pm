@@ -25,15 +25,9 @@ sub get
     my $self = shift;
     my $column_name = shift;
 
-    my $ret = $self->output->title($column_name);
+    my $ret = $self->{output}->title($column_name);
 
     $ret;
-}
-
-sub headers
-{
-    my $self = shift;
-    $self->output->headers;
 }
 
 sub html_attribute_string

@@ -25,7 +25,7 @@ sub is_extra
     my $self = shift;
     my $column_name = shift;
 
-    grep(/^$column_name$/, @{$self->extra->{headers}});
+    exists $self->extra->{columns}->{$column_name};
 }
 
 sub headers
@@ -135,8 +135,8 @@ This object holds a table that has calculated columns.
 
 =item is_extra
 
-The is extra method is used by underlying row to deside if a column needs to be
-calulated.
+The is extra method is used by underlying row to decide if a column needs to be
+calculated.
 
 =back
 

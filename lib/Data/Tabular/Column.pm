@@ -11,7 +11,6 @@ sub new
     my $self = bless({ @_ }, $class);
 
     die unless $self->{name};
-    die unless $self->{output};
 
     $self;
 }
@@ -23,28 +22,26 @@ sub name
     return $name;
 }
 
-sub output
-{
-    my $self = shift;
-    my $output = $self->{output};
-    return $output;
-}
-
 sub align
 {
     my $self = shift;
     my $output = $self->{output};
-    $output->align($self->{name});
+    "FIXME";
 }
 
 sub html_attributes
 {
     my $self = shift;
     my $output = $self->{output};
-    $output->html_column_attributes($self->{name});
+    "FIXME";
 }
 
 sub html_attribute_string
+{
+    "FIXME";
+}
+
+sub _html_attribute_string
 {
     my $self = shift;
     my $attributes = {
@@ -68,7 +65,7 @@ sub xls_width
     my $self = shift;
     my $ret = undef;
 
-    $ret = $self->output->xls_width($self->name) || 10;
+    $ret = "FIXME";
 
     $ret;
 }

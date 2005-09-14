@@ -15,6 +15,11 @@ sub new
     $self;
 }
 
+sub id
+{
+    1;
+}
+
 sub html_attribute_string
 {
     my $self = shift;

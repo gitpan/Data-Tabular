@@ -24,8 +24,9 @@ sub colspan
 {
     my $self = shift;
     my $header = shift;
-    die 'unknown column' unless $header eq '_header';
-    scalar($self->output->headers);
+    die 'unknown column ' . $header unless $header eq '_header';
+
+    scalar($self->output_headers);
 }
 
 sub table
@@ -38,6 +39,7 @@ sub get_column
 {
     my $self = shift;
     my $column_name = shift;
+    die 'unknown column ' . $column_name unless $column_name eq '_header';
     $self->{text};
 }
 

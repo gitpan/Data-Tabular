@@ -1,6 +1,6 @@
 use strict;
 
-package Data::Tabular::Output::HTML;
+package Data::Tabular::Output::TXT;
 
 use Time::HiRes qw ( gettimeofday tv_interval );
 
@@ -18,7 +18,7 @@ sub new
     die 'No table' unless $args->{table};
     $self->{table} = $args->{table};
 
-    $self->{output} = $args->{output} || $self->{table}->_output;
+    $self->{output} = $args->{output} || croak "Need output";
 
     $self;
 }
@@ -39,6 +39,7 @@ sub columns
 sub rows
 {
     my $self = shift;
+
     $self->{table}->rows(output => $self->output);
 }
 
@@ -57,7 +58,7 @@ warn 'HRef ', $href;
 	 @_,
      };
      $href->{attributes} = $new_attributes;
- }
+}
 
      $self;
 }
@@ -65,50 +66,35 @@ warn 'HRef ', $href;
 sub render
 {
     my $self = shift;
-    $self->html;
+    $self->text;
 }
 
-sub html
+sub text
 {
     my $self = shift;
+    my $ret = "\n";
 
-    my $attributes = $self->output->html_attribute_string;
-
-    $attributes .= '';
-    my $ret = "<table$attributes>\n";
-
-    for my $col ($self->columns()) {
-	my $attribute = $col->html_attribute_string;
-        $ret .= " <colgroup$attribute>\n";
-    }
+    my $output = $self->output;
 
     my @table;
+
     for my $row ($self->rows()) {
-	my $attribute = $row->html_attribute_string();
-        push(@table, " <tr$attribute>\n");
-	for my $cell ($row->cells()) {
-	    my $attributes = $cell->html_attribute_string;
-	    my $hdr = $cell->hdr;
-	    if ($hdr) {
-		push(@table, "  <th$attributes>");
-	    } else {
-		push(@table, "  <td$attributes>");
-	    }
+#        push(@table, " " . $row->id . " ");
+	for my $cell ($row->cells($output->headers)) {
             my $cell_data = $cell->html_string;
+            my $width = 20; # $cell->width;
 	    $cell_data =~ s/^\s*(.*)\s*$/$1/;
-	    if (length($cell_data) == 0) {
-	       $cell_data = '<br>';
-	    }
             push(@table, $cell_data);
-	    if ($hdr) {
-		push(@table, "</th>\n");
-	    } else {
-		push(@table, "</td>\n");
+	    my $length = $width - length($cell_data);
+	    if ($length <=0) {
+	        $length = 1;
 	    }
+	    push(@table, " " x $length);
 	}
+	push(@table, "\n");
     }
     $ret .= join('', @table);
-    $ret .= "</table>\n";
+
     $ret;
 }
 
@@ -117,11 +103,11 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output;
+Data::Tabular::Output::TXT;
 
 =head1 SYNOPSIS
 
-This object is used by Data::Tabular to render a table.
+This object is used by Data::Tabular to render a table in text format.
 
 =head1 DESCRIPTION
 

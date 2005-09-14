@@ -24,6 +24,7 @@ sub headers
     } else {
         $self->table->all_headers;
     }
+die;
     return $self->table->all_headers;
 }
 

@@ -69,12 +69,12 @@ sub raw_rows
     my @ret = ();
 
     for my $value (@{$self->{data}}) {
-       next unless $value;
-       if ($value->isa(__PACKAGE__)) {
-	   push(@ret, $value->raw_rows);
-       } else {
-	   push(@ret, $value);
-       }
+	next unless $value;
+	if ($value->isa(__PACKAGE__)) {
+	    push(@ret, $value->raw_rows);
+	} else {
+	    push(@ret, $value);
+	}
     }
     @ret;
 }
@@ -128,7 +128,12 @@ sub get_all
 sub rows
 {
     my $self = shift;
-    my $info = shift || { row => 0, pre_once => 0, x => 'ok' };
+    my $info = { 
+        @_,
+	row => 0,
+	pre_once => 0,
+	x => 'ok'
+    };
 
     return $self->{rows} if $self->{rows};
 
@@ -137,23 +142,22 @@ sub rows
 
     my $rid = 1;
     my @ret = ();
-
     if (my $action = $self->groups->[$self->level]->{pre}) {
 	my $grouper = Data::Tabular::Group::Interface->new(
 	   group => $self,
 	);
 	my @data = $action->($grouper);
 	eval {
-	    push(@ret, map({ $_->{row_id} = $rid++; $_ } @data));
+	    push(@ret, map({ $_->{row_id} = $rid++; $_->{output} = $info->{output}; $_ } @data));
 	};
 	if ($@) { warn $@; }
     }
 
     for my $value (@{$self->{data}}) {
 	if (my $x = $value->isa(__PACKAGE__)) {
-	    push(@ret, map({ $_->{row_id} = $rid++; $_ } ($value->rows($info))));
+	    push(@ret, map({ $_->{row_id} = $rid++; $_->{output} = $info->{output}; $_ } ($value->rows(%$info))));
 	} else {
-	    push(@ret, map({ $_->{row_id} = $rid++; $_ } ($value)));
+	    push(@ret, map({ $_->{row_id} = $rid++; $_->{output} = $info->{output}; $_ } ($value)));
 	}
     }
     $info->{x} = 'ok';
@@ -163,7 +167,7 @@ sub rows
 	   table => $self,
 	);
 	my @data = $action->($grouper);
-	push(@ret, map({ $_->{row_id} = $rid++; $_ } @data));
+	push(@ret, map({ $_->{row_id} = $rid++; $_->{output} = $info->{output}; $_ } @data));
     }
     $self->{rows} = \@ret;
     @{$self->{rows}};
@@ -172,3 +176,28 @@ sub rows
 1;
 __END__
 
+=head1 NAME
+
+Data::Tabular::Table::Group;
+
+=head1 SYNOPSIS
+
+This object is used by Data::Tabular to hold a table with grouped rows.
+
+=head1 DESCRIPTION
+
+=head2 METHODS
+
+=over
+
+=item rows
+
+Generate the rows for a table with the required calculated rows.
+
+=back
+
+=head1 SEE ALSO
+
+ Data::Tabular::Data
+
+=cut

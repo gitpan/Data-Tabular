@@ -9,7 +9,6 @@ use overload '@{}' => \&array,
 
 sub new
 {
-    
     my $caller = shift;
     my $class = ref($caller) || $caller;
     my $self = { @_ };
@@ -20,11 +19,7 @@ sub new
     }
     $self = bless $self, $class;
 
-croak 'need table' unless $self->table;
-    if (!$self->output) {
-         $self->{output_config} = $self->table->output;
-croak 'need output' unless $self->output;
-    }
+    croak 'need table' unless $self->table;
 
     $self;
 }
@@ -35,10 +30,20 @@ sub str
     'Row : '. $self->{input_row} .  join(':', $self->table->headers);
 }
 
+sub output_headers
+{
+# FIXME
+    1;
+}
+
 sub headers
 {
     my $self = shift;
-    return $self->output->headers;
+    if (@_) {
+        return @_;
+    } else {
+	return $self->table->headers;
+    }
 }
 
 sub html_attribute_string
@@ -53,7 +58,7 @@ sub cells
 {
     my $self = shift;
     my @ret = ();
-    my @headers = $self->headers;
+    my @headers = $self->headers(@_);
 
     my $x = 0;
     for my $header (@headers) {
@@ -72,13 +77,6 @@ sub cells
 sub colspan
 {
     1;
-}
-
-sub output
-{
-    my $self = shift;
-
-    $self->{output_config};
 }
 
 sub new_cell

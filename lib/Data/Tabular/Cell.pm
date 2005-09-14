@@ -11,8 +11,8 @@ sub new
 
     my $args = { @_ };
 
-    die unless $args->{row};
-    die unless $args->{cell};
+    die unless ref $args->{row};
+    die unless ref $args->{cell} || defined $args->{cell};
 
     my $self = bless($args, $class);
 
@@ -53,7 +53,7 @@ sub html_string
 {
     my $self = shift;
 
-    my $ret = $self->{row}->get_column($self->{cell});
+    my $ret = $self->{row}->get_column($self->{cell}) || '';
     if (my $type = ref($ret)) {
         if ($type eq 'HASH') {
 	    $ret = $ret->{html} || $ret->{text} || $ret->{data};
@@ -216,9 +216,34 @@ Data::Tabular::Cell - This object holds the information needed by a cell.
 
 =head1 SYNOPSIS
 
-The Data::Tabular::Cell object is normally only used intenally by the
+The Data::Tabular::Cell object is normally only used internally by the
 Data::Tabular package.
 
 =head1 DESCRIPTION
+
+The Data::Tabular::Cell package contains the methods that are needed to
+display the data in a given cell of the table.
+
+=head2 METHODS
+
+These methods return information about a given cell and are used by the
+different output routines to format the the data.
+
+=over
+
+=item raw_string
+
+This method returns the underling data that is in the original
+data table.
+
+=back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
+
+=head1 SEE ALSO
+
+Data::Tabular
 
 =cut

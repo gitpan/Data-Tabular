@@ -97,9 +97,9 @@ This object is used to supply tools to the Data::Tabular designer.
 It also helps to protect the data from that designer.
 
 It is import to know that extra columns are created from left to
-right.  Becuase of this you can use `extra' columns to create other
-extra columns.  This means that you should order tha extra columns
-in the order that they need to be created in, and not ithe the order
+right.  Because of this you can use `extra' columns to create other
+extra columns.  This means that you should order the extra columns
+in the order that they need to be created in, and not in the the order
 that they will be shown in the output.
 
 =head1 METHODS
@@ -121,5 +121,5 @@ first column.
 
 Method to sum a set of columns. Given a list of column names this method returns
 the sum of those columns.  The type of the data returned is column type element,
-but must conform to the Data::Tabular::Type::Frac contructor.
+but must conform to the Data::Tabular::Type::Frac constructor.
 

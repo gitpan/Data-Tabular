@@ -38,7 +38,7 @@ sub str
 sub _headers
 {
     my $self = shift;
-
+die;
     ('_description', @{$self->{sum_list} || []}, @{$self->{extra}->{headers} || []});
 }
 

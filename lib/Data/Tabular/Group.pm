@@ -1,6 +1,7 @@
 # Copyright (C) 2003, G. Allen Morris III, all rights reserved
 
 use strict;
+ 
 package Data::Tabular::Group;
 use base 'Data::Tabular::Table::Extra';
 
@@ -24,7 +25,14 @@ sub new
     my $self = $caller->SUPER::new(@_);
 
     if ($self->{groups}) {
-        ;
+	my @groups = @{$self->{groups}};
+	my $group = shift @groups;
+	die 'No column required for first group.' if $group->{column};
+	my $x = 2;
+        for my $group (@groups) {
+	    die "Need column for group $x" unless  $group->{column};
+	    $x++;
+	}
     } else {
 	die q|Columns are gone!| if $self->{columns};
         $self->{groups} = [
@@ -39,8 +47,6 @@ sub new
 
 #    die 'Group needs a table' unless $self->table;
 #    die 'table must be a Data::Tabular::Output object.' unless $self->table->isa('Data::Tabular::Output');
-
-#warn  'Output_config ', $self->output_config, ' self ', $self;
 
     $self;
 }
@@ -80,8 +86,9 @@ sub _doit
 
     while (my $row = shift @sections) {
 	for (my $x = 1; $x <= $level; $x++) {
+	    die 'Need column' unless  $self->{groups}->[$x]->{column};
 	    if ($self->compare($first, $row, $self->{groups}->[$x]->{column})) {
-                return ( $self->_do_group($level, $self->_doit($level+1, $first, @inp)),
+		return ( $self->_do_group($level, $self->_doit($level+1, $first, @inp)),
                          $self->_doit($level, $row, @sections)
 		       );
 	    }
@@ -114,10 +121,9 @@ sub rows
 {
     my $self = shift;
 
-#    my $ret = $self->_do_group(0, $self->_doit($self->max_level, $self->SUPER::rows));
-    my $ret = $self->_doit(0, $self->SUPER::rows);
+    my $ret = $self->_doit(0, $self->SUPER::rows(@_));
 
-    my @rows = $ret->rows;
+    my @rows = $ret->rows(@_);
     @rows;
 }
 
@@ -125,7 +131,7 @@ sub group_it
 {
     my $self   = shift;
     my $data   = shift;	# Data::Tabular::Output;
-die;
+
     my $ret;
     my $grouped = $self->{grouped};
     unless ($self->{grouped} && $self->data eq $data) {
@@ -141,7 +147,7 @@ sub _do_group
     my $self = shift;
     my $level = shift;
 
-    my $ret = Data::Tabular::Table::Group->new(data => [ @_ ], level => $level, group => $self, output => $self->output_config);
+    my $ret = Data::Tabular::Table::Group->new(data => [ @_ ], level => $level, group => $self);
     ($ret);
 }
 
@@ -156,7 +162,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Extra;
+Data::Tabular::Group;
 
 =head1 SYNOPSIS
 

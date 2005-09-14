@@ -1,0 +1,10 @@
+0.23
+	- Added more tests
+	- General clean up
+	- Added Build.PL
+
+0.22
+	- General clean up
+
+0.21-oe
+	- Original CPAN release
