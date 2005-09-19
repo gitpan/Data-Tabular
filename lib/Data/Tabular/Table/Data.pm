@@ -1,3 +1,5 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 package Data::Tabular::Table::Data;
 use base 'Data::Tabular::Table';
@@ -75,7 +77,7 @@ sub rows
     my $args = { @_ };
     my @ret;
 
-croak unless $args->{output};
+croak("Need output") unless $args->{output};
 
     for (my $row = 0; $row < $self->row_count; $row++) {
 	push(@ret, $self->row_package->new(

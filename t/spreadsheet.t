@@ -1,6 +1,6 @@
 use strict;
 
-use Test::More tests => 4;
+use Test::More tests => 2;
 
 use_ok( 'Data::Tabular' );
 
@@ -21,18 +21,20 @@ my $t1 = Data::Tabular->new(
 	[ 'rabbit', 'black', 'jane', 8, 9, 1.01, 'mar 4 2003' ],
     ],
     extra => {
-        extra1 => sub { 'extra column' },
-        extra2 => sub { 'extra column' },
+        extra1 => sub { 'H' },
+        extra2 => sub { 'I' },
+    },
+    group_by => {
+	groups => [
+	    {
+		pre => sub { my $self = shift; ($self->header(text => "First"), $self->titles() ) },
+		post => sub { my $self = shift; ($self->totals(sum_list => ['jan', 'feb']), $self->header(text => "Last")); },
+	    },
+	],
     },
 );
 
 use Data::Dumper;
-
-print $t1->txt;
-ok(1);
-
-print $t1->html;
-ok(1);
 
 my $xls;
 
@@ -43,7 +45,9 @@ SKIP: {
     skip 'Need Spreadsheet::WriteExcel', 1 if $skip;
     my $workbook = Spreadsheet::WriteExcel->new("/tmp/test2.xls");
     my $worksheet = $workbook->add_worksheet();
+
     $t1->xls(workbook => $workbook, worksheet => $worksheet);
+
     ok(1);
 }
 

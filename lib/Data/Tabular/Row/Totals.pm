@@ -1,3 +1,5 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 package Data::Tabular::Row::Totals;
 
@@ -150,7 +152,6 @@ die;
 
 sub hdr
 {
-die;
     1;
 }
 
@@ -164,7 +165,7 @@ die;
 sub id
 {
     my $self = shift;
-die;
+
     $self->{row_id} || 'No ID available';
 }
 
@@ -172,10 +173,15 @@ sub cell_html_attributes
 {
     my $self = shift;
     my $cell = shift;
-die;
+
     {
         align => ($cell->name() eq '_description' ? 'left' : 'right'),
     };
+}
+
+sub type
+{
+    'bob';
 }
 
 1;

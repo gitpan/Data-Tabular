@@ -1,8 +1,12 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 
 package Data::Tabular::Output::TXT;
 
 use Time::HiRes qw ( gettimeofday tv_interval );
+
+use base qw(Data::Tabular::Output);
 
 use Carp qw (croak);
 
@@ -34,13 +38,6 @@ sub columns
     my $self = shift;
 
     $self->{table}->columns;
-}
-
-sub rows
-{
-    my $self = shift;
-
-    $self->{table}->rows(output => $self->output);
 }
 
 sub attrib

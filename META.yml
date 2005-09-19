@@ -1,6 +1,6 @@
 ---
 name: Data-Tabular
-version: 0.23
+version: 0.24
 author:
   - '"G. Allen Morris III" <gam3@gam3.net>'
 abstract: Handy Table Manipulation and rendering Object
@@ -16,7 +16,7 @@ build_requires:
 provides:
   Data::Tabular:
     file: lib/Data/Tabular.pm
-    version: 0.23
+    version: 0.24
   Data::Tabular::Cell:
     file: lib/Data/Tabular/Cell.pm
   Data::Tabular::Column:

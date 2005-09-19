@@ -1,8 +1,12 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 
 package Data::Tabular::Output::XLS;
 
 use Carp qw (croak);
+
+use base qw(Data::Tabular::Output);
 
 sub new
 {
@@ -42,12 +46,6 @@ sub output
 {
     my $self = shift;
     $self->{output} or $self->table->output;
-}
-
-sub rows
-{
-    my $self = shift;
-    $self->{table}->rows;
 }
 
 sub columns
@@ -114,7 +112,8 @@ sub render
         my $col = $column->x;
 	my $align = $column->align || 'left';
 
-	$worksheet->set_column($col, $col, $column->xls_width, $formats->{$align});
+#FIXME 35 is width
+	$worksheet->set_column($col, $col, undef, $formats->{$align});
     }
 
     my $types = {
@@ -174,7 +173,7 @@ sub render
 	for my $cell ($row->cells()) {
 	    my $attributes = $cell->html_attribute_string;
 	    my ($y, $x, $cell_data, $type) = ($cell->row_id, $cell->col_id, $cell->xls_string, $cell->xls_type);
-
+print "$y $x\n";
 	    my $cell_type = $type;
 	    if ($row->hdr) {
 	        $cell_type .= '_hdr';
@@ -185,12 +184,8 @@ sub render
 	    if ($row->type eq 'averages') {
 	        $type = 'text';
 	        $cell_type = 'averages_' . $cell->xls_align($cell);
-#die $type, ' -> ', $cell_type;
 	    }
-
-#if ($row->isa('Data::Tabular::Row::Totals')) {
-# warn 'Totals = ',  join(':', $y, $x, $cell_data, ref($cell_data), $type);
-#}
+next unless $cell_data;
 	    my $format = undef;
             if ($type eq 'date') {
                 if ($cell_data) {

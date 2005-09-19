@@ -1,3 +1,5 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 package Data::Tabular::Row;
 
@@ -62,6 +64,7 @@ sub cells
 
     my $x = 0;
     for my $header (@headers) {
+        next unless $header;
         push(@ret, 
 	    Data::Tabular::Cell->new(
 		row => $self,
@@ -128,6 +131,7 @@ sub data
 sub id
 {
     my $self = shift;
+print "Row: ", $self->{row_id}, "\n";
     $self->{row_id} || 'No ID available';
 }
 

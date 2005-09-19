@@ -1,3 +1,5 @@
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+
 use strict;
 package Data::Tabular::Group::Interface;
 
@@ -51,11 +53,13 @@ sub totals
     my $self = shift;
     my $args = { @_ };
     require Data::Tabular::Row::Totals;
+    my $sum_list = $args->{sum_list} || $self->{group}->{group}->{sum_list};
+    die('Need sum list') unless $sum_list;
 
     Data::Tabular::Row::Totals->new(
 	text => $args->{title},
 	table => $self->{group},
-        sum_list => $self->{group}->{group}->{sum_list},
+        sum_list => $sum_list,
         extra => $self->{group}->{group}->{extra},
     );
 }

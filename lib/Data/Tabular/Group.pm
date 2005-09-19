@@ -1,4 +1,4 @@
-# Copyright (C) 2003, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
 
 use strict;
  
