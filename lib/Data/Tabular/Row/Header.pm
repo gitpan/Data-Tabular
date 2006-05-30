@@ -28,7 +28,7 @@ sub colspan
     my $header = shift;
     die 'unknown column ' . $header unless $header eq '_header';
 
-    scalar($self->output_headers);
+    scalar($self->output->headers);
 }
 
 sub table
@@ -55,14 +55,23 @@ sub cell_html_attributes
 {
     my $self = shift;
     my $cell = shift;
+    my $column_name = $cell->name();
+    die 'unknown column ' . $column_name unless $column_name eq '_header';
+    my $span = $self->output->headers;
     {
         align => 'left',
+	colspan => $span,
     };
 }
 
 sub type
 {
-    'FIXME';
+    'header';
+}
+
+sub is_header
+{
+    1;
 }
 
 1;

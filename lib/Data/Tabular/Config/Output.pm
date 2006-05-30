@@ -9,7 +9,7 @@ sub new
     my $class = ref($caller) || $caller;
 
     my $self = bless { @_ }, $class;
-    $self->{caller} = join(':', caller) ;
+    $self->{caller} = join(':', caller);
 
     $self->{xls} ||= {};
     $self->{html} ||= {};
@@ -22,6 +22,21 @@ sub column_list
 {
     my $self = shift;
     wantarray ? @{$self->{headers}} : $self->{headers};
+}
+
+sub col_id
+{
+    my $self = shift;
+    my $col_name = shift;
+
+    my $x = 0;
+    for my $col ($self->column_list) {
+	if ($col eq $col_name) {
+	    return $x;
+	}
+	$x++;
+    }
+    die "Unknown column $col_name";
 }
 
 sub title
@@ -106,6 +121,30 @@ sub test_xls_attribute
     my $attribute = shift;
     return $self->{xls}->{$attribute};
 }
+
+sub table
+{
+    shift->{title};
+}
+
+sub set_type
+{
+    my $self = shift;
+    my $args = { @_ };
+
+    $self->{types}->{$args->{name}} = $args->{type};
+
+    undef;
+}
+
+sub type
+{
+    my $self = shift;
+    my $name = shift;
+
+    $self->{types}->{$name} || 'text';
+}
+
 
 1;
 __END__

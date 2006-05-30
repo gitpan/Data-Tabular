@@ -32,20 +32,11 @@ sub str
     'Row : '. $self->{input_row} .  join(':', $self->table->headers);
 }
 
-sub output_headers
-{
-# FIXME
-    1;
-}
-
 sub headers
 {
     my $self = shift;
-    if (@_) {
-        return @_;
-    } else {
-	return $self->table->headers;
-    }
+
+    return $self->output->headers;
 }
 
 sub html_attribute_string
@@ -77,19 +68,16 @@ sub cells
     @ret;
 }
 
+sub output
+{
+    my $self = shift;
+
+    $self->{output} || die;
+}
+
 sub colspan
 {
     1;
-}
-
-sub new_cell
-{
-    my $self = shift;
-    my $args = {@_};
-    die unless defined $args->{input_col};
-    my $input_column = $args->{input_col};
-warn __PACKAGE__ . '::new_cell';
-    $self->{cols}->[$input_column] = {};
 }
 
 sub table
@@ -97,41 +85,14 @@ sub table
     shift->{table};
 }
 
-sub array
-{
-    my $self = shift;
-croak;
-    my $data = $self;
-    $data = $data->[1];
-    $data;
-}
-
-sub attributes
-{
-    my $self = shift;
-    $self->[0];
-}
-
-sub selected
-{
-    my $self = shift;
-    map({ $self->new_cell(data => $_, input_col => 1); } ('a', 'b'));
-}
-
 sub hdr
 {
-}
-
-sub data
-{
-    my $self = shift;
-    wantarray ? @{$self->[1]} : $self->[1];
 }
 
 sub id
 {
     my $self = shift;
-print "Row: ", $self->{row_id}, "\n";
+
     $self->{row_id} || 'No ID available';
 }
 
@@ -148,6 +109,8 @@ sub type
     warn 'No type for ' . ref($self);
     'unknown';
 }
+
+sub is_title { 0 };
 
 1;
 __END__

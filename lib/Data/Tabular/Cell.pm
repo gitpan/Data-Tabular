@@ -5,7 +5,7 @@ package Data::Tabular::Cell;
 
 use Carp qw(croak);
 
-use overload '""'  => \&str;
+#use overload '""'  => \&str;
 
 sub new
 {
@@ -13,8 +13,8 @@ sub new
 
     my $args = { @_ };
 
-    die unless ref $args->{row};
-    die unless ref $args->{cell} || defined $args->{cell};
+    die "No row" unless ref $args->{row};
+    die "No cell" unless ref $args->{cell} || defined $args->{cell};
 
     my $self = bless($args, $class);
 
@@ -48,6 +48,7 @@ sub row
 sub str
 {
     my $self = shift;
+    die "STR " . caller;
     'Cell : '. $self->{cell} . ' ' . $self->html_string;
 }
 
@@ -71,6 +72,7 @@ die 'XXXXX';
     } else {
 #        $ret;
     }
+
     length($ret) ? $ret : '&nbsp';	# This is wrong FIXME
 }
 
@@ -105,7 +107,7 @@ sub html_attribute_string
 		    %{$data->attributes()},
 		}
 	    } else {
-warn 'no attributes';
+warn 'no attributes ', ref($data);
 	    }
 	}
     }

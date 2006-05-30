@@ -4,6 +4,7 @@ use strict;
 
 package Data::Tabular::Output::XLS;
 
+our @CARP_NOT = qw (Data::Tabular Data::Tabular::Output);
 use Carp qw (croak);
 
 use base qw(Data::Tabular::Output);
@@ -25,7 +26,7 @@ sub new
     };
     for my $arg (keys %$arg_list) {
         $self->{$arg} = $args->{$arg};
-        die "Need $arg" if $arg_list->{$arg}->{required} && !defined($self->{$arg});
+        croak "Need $arg" if $arg_list->{$arg}->{required} && !defined($self->{$arg});
 	delete $args->{$arg};
     }
 
@@ -34,6 +35,8 @@ sub new
     }
 
     $self->render;
+
+    $self;
 }
 
 sub table
@@ -78,6 +81,13 @@ sub col_offset
     $self->{col_offset};
 }
 
+sub get_col_id
+{
+    my $self = shift;
+
+    $self->output->col_id(shift);
+}
+
 sub render
 {
     my $self = shift;
@@ -108,11 +118,24 @@ sub render
 	),
     };
 
-    for my $column ($self->columns()) {
-        my $col = $column->x;
-	my $align = $column->align || 'left';
+    my $output = $self->output;
 
-#FIXME 35 is width
+    for my $column ($self->columns()) {
+        my $col = $column->col_id;
+	my $align = $column->align || undef;
+
+	my $type = $self->output->type($column->name);
+        my $width = undef;
+	if ($type eq 'number') {
+	    $align ||= 'right';
+	} elsif ($type eq 'time') {
+	    $width = 22;
+	    $align ||= 'right';
+	} elsif ($type eq 'date') {
+	    $width = 12;
+	    $align ||= 'right';
+	}
+        
 	$worksheet->set_column($col, $col, undef, $formats->{$align});
     }
 
@@ -123,6 +146,11 @@ sub render
 	},
 	month => {
 	    num_format => 'mm/yyyy',
+	    align => 'right',
+	    size => 8,
+	},
+	time => {
+	    num_format => 'mm/dd/yyyy hh:mm:ss am/pm',
 	    align => 'right',
 	    size => 8,
 	},
@@ -163,33 +191,50 @@ sub render
     $formats->{'averages_center'} =  $workbook->addformat(align => 'center', size => 8, bold => 1, text_wrap => 0);
 
     my $title_pinned = 0;
+
     for my $row ($self->rows()) {
-        if ($row->type eq 'title') {
+        if ($row->is_title) {
 	    if ($pin_title) {
 	        next if $title_pinned;
 		$title_pinned = 1;
 	    }
 	}
 	for my $cell ($row->cells()) {
-	    my $attributes = $cell->html_attribute_string;
 	    my ($y, $x, $cell_data, $type) = ($cell->row_id, $cell->col_id, $cell->xls_string, $cell->xls_type);
-print "$y $x\n";
 	    my $cell_type = $type;
 	    if ($row->hdr) {
 	        $cell_type .= '_hdr';
 	    }
 	    if ($row->type eq 'title') {
 	        $cell_type = $cell->title_format;
-	    }
-	    if ($row->type eq 'averages') {
+	    } elsif ($row->type eq 'averages') {
 	        $type = 'text';
 	        $cell_type = 'averages_' . $cell->xls_align($cell);
+	    } elsif ($row->type eq 'header') {
+	    } elsif ($row->type eq 'totals') {
+                if (ref($cell_data)) {
+		    $type = 'formula';
+		}
+	    } else {
+		$type = $self->output->type($cell->name);
 	    }
 next unless $cell_data;
 	    my $format = undef;
+
+	    if (ref($cell_data)) {
+# FIXME
+		$type = 'formula';
+	    }
+
             if ($type eq 'date') {
                 if ($cell_data) {
-                    $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+                    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'date'});
+		    $worksheet->set_column($x, $x, 20);
+                }
+            } elsif ($type eq 'time') {
+                if ($cell_data) {
+                    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'time'});
+		    $worksheet->set_column($x, $x, 23);
                 }
             } elsif ($type eq 'month') {
                 my $date_data = $cell_data;
@@ -204,6 +249,35 @@ next unless $cell_data;
                 $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
             } elsif ($type eq 'percent') {
                 $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+            } elsif ($type eq 'formula') {
+		my $formula = '=';
+		if ($cell_data->{type} eq 'sum') {
+		    if (!defined $cell_data->{rows}) {
+			$formula .= join('+', map({ my $x = $self->get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+		    } else {
+			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
+		    }
+		} elsif ($cell_data->{type} eq 'average' || $cell_data->{type} eq 'avg') {
+		    $formula .= '(';
+		    if (!defined $cell_data->{rows}) {
+			$formula .= join('+', map({ my $x = $self->get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+		    } else {
+			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
+		    }
+		    $formula .= ')';
+		    $formula .= "/" . scalar(@{$cell_data->{rows} || $cell_data->{columns}});
+		} else {
+		    die $cell_data->{type};
+		}
+
+		$formula .= '';
+		my $value = $cell_data->{html};
+		eval {
+                $worksheet->write_formula($y, $x, $formula, $formats->{$cell_type}, $value);
+		};
+		if ($@) {
+		    die "$formula " . $@;
+		}
             } else {
                 warn "Unknown type $type";
                 $worksheet->write($y, $x, 'unknows type ' . $cell_data);
@@ -232,5 +306,4 @@ This object is used by Data::Tabular to render a table.
 =item new
 
 =cut
-1;
 

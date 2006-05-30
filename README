@@ -38,7 +38,7 @@ DESCRIPTION
     The group_by section. This is allows titles, and subtotals to be
     inserted into table.
 
-    The output section. This allows the output to be formated and rendered
+    The output section. This allows the output to be formatted and rendered
     for a particular type of output. Currently HTML and Excel spreadsheets
     are supported.
 
@@ -53,8 +53,8 @@ API
     new The new method
 
   Output Control Methods
-    title
-        Control output titles.
+    output
+        Get the output object.
 
   Accessor Methods
     data
@@ -77,8 +77,6 @@ API
     html
         returns html representation of the table.
 
-    xml returns xml representation of the table.
-
     xls returns xls representation of the table.
 
     txt returns text representation of the table.
@@ -91,9 +89,9 @@ EXAMPLES
      my $headers = $st->{NAMES}
  
      my $table = Data::Tabular->new(
-            data => $data,
-            headers => $headers,
-        );
+         data => $data,
+         headers => $headers,
+     );
 
 AUTHOR
     "G. Allen Morris III" <gam3@gam3.net>

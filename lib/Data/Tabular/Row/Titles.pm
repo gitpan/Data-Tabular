@@ -64,6 +64,11 @@ sub type
     'title';
 }
 
+sub is_title
+{
+    1;
+}
+
 1;
 __END__
 

@@ -53,6 +53,7 @@ sub columns
     my $x = 0;
     map({
 	Data::Tabular::Column->new(
+	    @_,
 	    offset => $x++,
 	    name => $_,
 	    );

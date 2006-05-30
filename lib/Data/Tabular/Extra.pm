@@ -40,21 +40,20 @@ sub get
 sub sum
 {
     my $self = shift;
-    my $column = shift;
-    my $total = $self->{row}->get_column($column);
-# FIX
-    if (ref($total) eq 'HASH') {
-	$total = $total->{html};
-    }
+    my $total = 0;
 
-    for $column (@_) {
+    for my $column (@_) {
 	my $data = $self->{row}->get_column($column);
 	if (ref($data) eq 'HASH') {
 	    $data = $data->{html};
 	}
 	$total += $data;
     }
-    $total;
+    bless {
+	html => $total,
+	columns => [ @_ ],
+	type => 'sum',
+    }, 'Data::Tabular::Formula';
 }
 
 sub average
@@ -62,12 +61,24 @@ sub average
     my $self = shift;
     my $count = scalar(@_);
 
-    my $total = $self->{row}->get_column(shift);
+    my $total = 0;
 
     for my $column (@_) {
 	$total += $self->{row}->get_column($column);
     }
-    $total / $count;
+    bless {
+	html => $total,
+	count => $count,
+	columns => [ @_ ],
+	type => 'average',
+    }, 'Data::Tabular::Formula';
+}
+
+sub row_id
+{
+    my $self = shift;
+
+    $self->{row}{row_id};
 }
 
 1;

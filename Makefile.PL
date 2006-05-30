@@ -2,12 +2,13 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PL_FILES' => {},
-          'INSTALLDIRS' => 'site',
           'NAME' => 'Data::Tabular',
           'VERSION_FROM' => 'lib/Data/Tabular.pm',
           'PREREQ_PM' => {
-                           'Test::More' => 0
-                         }
+                           'Digest::MD5' => '0',
+                           'Test::More' => '0'
+                         },
+          'INSTALLDIRS' => 'site',
+          'PL_FILES' => {}
         )
 ;

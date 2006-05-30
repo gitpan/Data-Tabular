@@ -5,8 +5,6 @@ package Data::Tabular::Column;
 
 use Carp qw(croak);
 
-use overload '""'  => \&str;
-
 sub new
 {
     my $class = shift;
@@ -28,19 +26,30 @@ sub align
 {
     my $self = shift;
     my $output = $self->{output};
+
     "FIXME";
+}
+
+sub colgroup_attribute
+{
 }
 
 sub html_attributes
 {
     my $self = shift;
     my $output = $self->{output};
-    "FIXME";
+
+    "FIXME " . ref $self;
 }
 
 sub html_attribute_string
 {
-    "FIXME";
+    my $self = shift;
+    my $output = $self->{output};
+
+#FIXME
+
+    '';
 }
 
 sub _html_attribute_string
@@ -62,15 +71,7 @@ sub _html_attribute_string
     $ret;
 }
 
-sub xls_width
-{
-    my $self = shift;
-    my $ret = undef;
-
-    $ret;
-}
-
-sub x
+sub col_id 
 {
     my $self = shift;
     $self->{offset};

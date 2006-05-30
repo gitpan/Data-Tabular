@@ -71,16 +71,17 @@ sub averages
     my $self = shift;
     my $args = { @_ };
     require Data::Tabular::Row::Averages;
+    my $sum_list = $args->{sum_list} || $self->{group}->{group}->{sum_list};
 
     Data::Tabular::Row::Averages->new(
-        count => $self->count(),
-	text => $args->{text},
+	text => $args->{title},
 	table => $self->{group},
-        sum_list => $self->{group}->{group}->{sum},
+        sum_list => $sum_list,
         extra => $self->{group}->{group}->{extra},
     );
 }
 
+*avg = \&averages;
 
 1;
 __END__
@@ -168,10 +169,12 @@ This method return a row with the columns listed in the I<sum array> summed.
 
 =over
 
-=item averages
+=item averages/avg
 
 This is similar to the totals method, but each value is divided by the
 number of input rows before being output.
+
+This is
 
 =over
 

@@ -17,6 +17,11 @@ sub new
 
 sub row_count
 {
+    shift->_row_count;
+}
+
+sub _row_count
+{
     my $self = shift;
 
     scalar(@{$self->{data}->{rows}});
@@ -77,9 +82,7 @@ sub rows
     my $args = { @_ };
     my @ret;
 
-croak("Need output") unless $args->{output};
-
-    for (my $row = 0; $row < $self->row_count; $row++) {
+    for (my $row = 0; $row < $self->_row_count; $row++) {
 	push(@ret, $self->row_package->new(
 	    table => $self,	# FIXME: This is very bad!
 	    input_row => $row,

@@ -10,11 +10,13 @@ my $builder = Module::Build->new(
     },
     build_requires => {
 	'Test::More'     => 0,    
+	'Digest::MD5'    => 0,    
     },
     recommends => {
     	'Spreadsheet::WriteExcel' 		=> 0,
     	'Spreadsheet::WriteExcel::Simple' 	=> 0,
 	'Spreadsheet::WriteExcel::Utility'	=> 0,
+	'Spreadsheet::ParseExcel'	=> 0,
     },
     create_readme => 1,
     sign           => 1,

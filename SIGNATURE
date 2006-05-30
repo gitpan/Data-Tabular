@@ -14,53 +14,55 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 a4ba9a1561d95614e636f9252248afff04be8cb7 Build.PL
-SHA1 4593010f8a00cdedab92d04e587e8522b5e7dbdd Changes
-SHA1 cdc82ef8f9f757339dabfca3020b7e92c5c33d8a MANIFEST
-SHA1 46d80cfffea6a0fb668e3760f8d9cb3409b256bd META.yml
-SHA1 ff70b47fe1ae2633015305e2e6a3a19d3b2d6103 Makefile.PL
-SHA1 2c2a2c6febc02b2dcf7a194fab9e0cc105d3f498 README
-SHA1 e6b66b5aed40bbf8fabc06d1f82e81e1f0e8351d lib/Data/Tabular.pm
-SHA1 c506b1b0b182761a8b44ba8733836a844f62ef02 lib/Data/Tabular/Cell.pm
-SHA1 5e53c1404396ae8892fcf9d29605e543bd041336 lib/Data/Tabular/Column.pm
+SHA1 54b2fa30a6a98875a32c4b7ce0e0e097b4990e63 Build.PL
+SHA1 3039aecd32bad37bd3cf8cd80b786cee11281bad Changes
+SHA1 30159833b6c05db2d1e00d9c0f2ee16a7997f7cb MANIFEST
+SHA1 9c327c39f8bebfb1ba4db0ed4c09cfb08acde796 META.yml
+SHA1 4e2f808c908fe32287de75b492a06b7334a50fc2 Makefile.PL
+SHA1 1e826c6b050c92ac66916f1d402fb5dab0b92f50 README
+SHA1 d6b029ff9ad56418e72b35dbf632b07e3c3f0cef examples/table1.cgi
+SHA1 60130cb8c580e05d9f0010d136977b8201452a9c lib/Data/Tabular.pm
+SHA1 b71cb7dadb93bf86bdc8227e13b7e2e23f94b0f2 lib/Data/Tabular/Cell.pm
+SHA1 9970570e384f91edc455751334175b204fe3c687 lib/Data/Tabular/Column.pm
 SHA1 c5801ced349cd249b0e29e002793a8c4517fcef0 lib/Data/Tabular/Config/Extra.pm
-SHA1 937015f71eb57b308b906474b2ceed4912058f79 lib/Data/Tabular/Config/Output.pm
-SHA1 2e61ec052182ff33565defea80c750731f940787 lib/Data/Tabular/Extra.pm
-SHA1 3db31da5b9d7e37ede248319e8da09a139eed56a lib/Data/Tabular/Group.pm
-SHA1 2bfaad34619262f083a8030c25bedc0892e9522f lib/Data/Tabular/Group/Interface.pm
-SHA1 04dadcc1e9940365a88ad781c2f7af3ecab8becc lib/Data/Tabular/Output.pm
+SHA1 b03e51906329907f57689aeebe6a92efa96773be lib/Data/Tabular/Config/Output.pm
+SHA1 0633f6d276c482c29ff3868b445cafbfa16e8af3 lib/Data/Tabular/Extra.pm
+SHA1 93f0bab089da0e1175e31c2b86b22eb5ea954638 lib/Data/Tabular/Formula.pm
+SHA1 9f18f8c2473ad2e518924fdd9c63ae16e44e8325 lib/Data/Tabular/Group.pm
+SHA1 a7f31ac9fe2b00078e8399ea640184e2d6d6a558 lib/Data/Tabular/Group/Interface.pm
+SHA1 ac9e727e77384d3a0f2701332ca0e26e373cf1f8 lib/Data/Tabular/Output.pm
 SHA1 05e4e1c00463732b01a3f8b66400590737dc0c4e lib/Data/Tabular/Output/CSV.pm
-SHA1 97aeb8a0b48d57af6984c434c5f975ee5e6d3224 lib/Data/Tabular/Output/HTML.pm
-SHA1 2558cec31f16affc65d1996a34c6aa3146240e65 lib/Data/Tabular/Output/TXT.pm
-SHA1 87ef1f11b272178c51702a6e9d468afe7e59fdba lib/Data/Tabular/Output/XLS.pm
-SHA1 634ffe893d21917ba45a4694592a6fb0ac3efe09 lib/Data/Tabular/Row.pm
-SHA1 0e4ee831f32695833ffed181c7e42898bccf3515 lib/Data/Tabular/Row/Averages.pm
+SHA1 7bf5ac24e4eac4bced51f8cd4f6e1972ac43e136 lib/Data/Tabular/Output/HTML.pm
+SHA1 5bca20ec273dc7ec5883821b8fe37f338d37124f lib/Data/Tabular/Output/TXT.pm
+SHA1 0f62e15960f1db8b7027aa018d7880b09f06267e lib/Data/Tabular/Output/XLS.pm
+SHA1 4018d0709aeaa49d90552d7698402e594976ec8f lib/Data/Tabular/Row.pm
+SHA1 3c07d2713efbc5fce747ed5ec49d59556d8ae96f lib/Data/Tabular/Row/Averages.pm
 SHA1 72a42086a6c350b90a08a022f452911cca59c245 lib/Data/Tabular/Row/Data.pm
-SHA1 c55e43dcf3631b9e15987d2dbfa16a34fc2ab877 lib/Data/Tabular/Row/Extra.pm
+SHA1 1ef4b856ecde358e69a62f22a53bd43298b48455 lib/Data/Tabular/Row/Extra.pm
 SHA1 b8f3e05e7d0a4329d79691f85882a9f8bb018186 lib/Data/Tabular/Row/General.pm
 SHA1 06354aac7faab34aeb52b7d7cbbf77d256313faa lib/Data/Tabular/Row/Group.pm
-SHA1 821b83630d597c7b2d24316eb049fce299977c2b lib/Data/Tabular/Row/Header.pm
-SHA1 ca3461e574daa6af84a046f2177e8b562e581d80 lib/Data/Tabular/Row/Titles.pm
-SHA1 eec795c4aeb1db070c627745af1de596e4687e84 lib/Data/Tabular/Row/Totals.pm
-SHA1 d6854bc76525b403dc97573b91b4497f2dc47b1f lib/Data/Tabular/Table.pm
-SHA1 1073499869e9e7c817364391278f87ff62be24c0 lib/Data/Tabular/Table/Data.pm
-SHA1 eefa10a947d34028ab563812c7ae46f75d1c1a59 lib/Data/Tabular/Table/Extra.pm
-SHA1 522315d8f9613590b84610ea3b3d83ee4b1ea620 lib/Data/Tabular/Table/Group.pm
-SHA1 a5c5b8d5967d0db790453da6c813009862107c4f t/Data-Tabular.t
-SHA1 627f227cbbd6cfeea14bf058db4b7c90e63c3957 t/cgi.t
-SHA1 64119aca36f401477b8cd34f2919bdb6418c3fef t/coverage.t
+SHA1 dd2730d289a7be8b44fd9360cc21229edea780bd lib/Data/Tabular/Row/Header.pm
+SHA1 f1a2d56d61138f74026ca71988752f4abea04c0d lib/Data/Tabular/Row/Titles.pm
+SHA1 f8e6761f8b32da7a0fa0951bdb565262c7e4eee4 lib/Data/Tabular/Row/Totals.pm
+SHA1 d54eb1d2056bf9813501d7d59d6158e8523fbd18 lib/Data/Tabular/Table.pm
+SHA1 ff1ff9450b791237cf3b9d4704857ad6d9bd600c lib/Data/Tabular/Table/Data.pm
+SHA1 0a267107985f8e3a3a11fa87efcb98d4de77fac2 lib/Data/Tabular/Table/Extra.pm
+SHA1 9157bedd8c27ed6f7deb779dd77360ab1cd0806f lib/Data/Tabular/Table/Group.pm
+SHA1 152e27dd8b71c4187b58cfd2b9016705d7a14023 t/Data-Tabular.t
+SHA1 5b0fc9f539ab785cc3e379697847fd45058ec727 t/cgi.t
+SHA1 bcc217aa0ececf2ff653746f05680600712c56a3 t/coverage.t
 SHA1 3ca85dffe36253f8c84f39bd4b2d690f3ff307e4 t/csv.t
 SHA1 f1074a6d45f66edd653dd0f8bc56dc879728c965 t/perl.xls
 SHA1 f8bd63b0fb73e08a69aab235e1996c75e90a21c5 t/pod.t
 SHA1 910fc94d9f696fce054f2c754575078a4ecb9b9b t/spelling.t
-SHA1 d3d901bca1023956d8fde3484b56656baa9cc6c9 t/spreadsheet.t
-SHA1 5411b63ac14534430ac7bf2dfbc4b81d3d449a3a t/spreadsheets.t
+SHA1 acb9896c543be95be57fd2c35ee5f757867f6414 t/spreadsheet.t
+SHA1 67a64d18a7e9096cf8b1815d54232c0a8ed8ad59 t/spreadsheets.t
 SHA1 d0a79b4ac31a7e61e7efdf97dde927c709907793 t/txt.t
-SHA1 ebde5abae592e6901dcb1df326d06568e5f2dfea t/txt_2.t
+SHA1 af6ecee4024934b2d3f5be8ba46d70a807db4ddc t/txt_2.t
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
+Version: GnuPG v1.4.2.2 (GNU/Linux)
 
-iD8DBQFDLkBFliSr/X1H0FwRAgkeAJ4g3CVNcRrJjxPjG7pSdZG01z18qgCglgYj
-LSFcTrPfpMXubdml5P6yecU=
-=M7Uy
+iD8DBQFEfM3wliSr/X1H0FwRAu5MAJ9gLVov/Cowf1/T2PyMSvRkjWoGSwCgmmVN
+HkjBRoD66LLcHNFPcwd60so=
+=YQ26
 -----END PGP SIGNATURE-----

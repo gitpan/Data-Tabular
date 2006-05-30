@@ -24,62 +24,98 @@ sub new
 sub str
 {
     my $self = shift;
-die caller;
-    'Row::Total';
+
+    'Row::Totals';
 }
 
 sub cells
 {
     my $self = shift;
     my @ret = ();
-    my @headers = $self->headers;
+    my @headers = $self->headers();
 
     my $offset = 0;
     my $hash;
-    for my $x ( @{$self->{extra}->{headers} || []} ) {
-        $hash->{$x} = { extra => 1 };
-    }
     for my $x ( @{$self->{sum_list} || []} ) {
         $hash->{$x} = { sum => 1 };
     }
 
-    my $start = 0;
-    for ($start = 0; $start <= $#headers; $start++) {
-        my $column_name = $headers[$start];
-	last unless $column_name && $hash->{$column_name} && $hash->{$column_name}->{sum};
-    }
-
-    my $colspan = 1;
-    for (my $col = $start + 1; $col <= $#headers; $col++) {
-        my $column_name = $headers[$col];
-	last if $hash->{$column_name};
-        $colspan++;
-	if ($colspan > 1) {
-	    delete $headers[$col];
-	}
-    }
-    $headers[$start] = '_description';
-    $hash->{'_description'} = {
-       span => $colspan,
-    };
-
-    $colspan = 1;
+    my $start;
     my $x = 0;
-    for (my $col = 0; $col <= $#headers; $col += $colspan || 1) {
-        my $column_name = $headers[$col];
-
-	$colspan = $hash->{$column_name}->{span} || 1;
-        push(@ret, 
+    my $state = 0;
+    my $cols = 1;
+    while (my $column_name = shift @headers) {
+        if ($state == 0) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => $column_name,
+			colspan => 1, 
+			id => $x,
+		    ),
+		);
+	    } else {
+		$state++;
+	    }
+	}
+	if ($state == 1) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => '_description',
+			colspan => $cols - 1, 
+			id => $x - ($cols - 1),
+		    ),
+		); 
+		$cols = 1;
+		$state++;
+	    } else {
+		$cols++;
+	    }
+	}
+	if ($state == 2) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+	        if ($cols > 1) {
+		    push(@ret,
+			Data::Tabular::Cell->new(
+			    row => $self,
+			    cell => '_filler',
+			    colspan => $cols - 1, 
+			    id => $x,
+			),
+		    ); 
+		    $cols = 1;
+		}
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => $column_name,
+			colspan => $cols, 
+			id => $x,
+		    ),
+		); 
+		$cols = 1;
+	    } else {
+	        $cols++;
+	    }
+	}
+	die if ($state >= 3);
+	$x++;
+    }
+    if ($cols > 1) {
+	push(@ret,
 	    Data::Tabular::Cell->new(
 		row => $self,
-		cell => $column_name,
-		colspan => $colspan, 
-		id => $x,
+		cell => '_filler',
+		colspan => $cols, 
+		id => $x - 1,
 	    ),
 	); 
-	$x += $colspan;
+	$cols = 1;
     }
-
+die $cols if $cols > 1;
     @ret;
 }
 
@@ -100,21 +136,15 @@ sub get_column
     if ($column_name eq '_description') {
         $ret = $self->{text};
     } elsif (grep(m|$reg|, @{$self->sum_list})) {
-	$ret = $self->table->sum($column_name);
+        $ret = $self->table->sum($column_name);
     } elsif (grep(m|$reg|, @{$self->{extra}->{headers} || []})) {
-#       $ret = $self->extra_column($self, $column_name);
-       $ret = "extra($column_name)";
+	$ret = "extra($column_name)";
+    } elsif ($column_name eq '_filler') {
+        $ret = undef;
     } else {
         $ret = 'N/A('. $column_name . ')';
     }
     $ret;
-}
-
-sub extra_package
-{
-    require Data::Tabular::Extra;
-die;
-    'Data::Tabular::Extra';
 }
 
 sub extra_column
@@ -141,13 +171,6 @@ sub extra_column
     }
     
     $ret;
-}
-
-sub attributes
-{
-    my $self = shift;
-die;
-    $self->[0];
 }
 
 sub hdr
@@ -181,7 +204,7 @@ sub cell_html_attributes
 
 sub type
 {
-    'bob';
+    'totals';
 }
 
 1;

@@ -4,8 +4,6 @@ use strict;
 
 package Data::Tabular::Output::TXT;
 
-use Time::HiRes qw ( gettimeofday tv_interval );
-
 use base qw(Data::Tabular::Output);
 
 use Carp qw (croak);
@@ -31,33 +29,6 @@ sub output
 {
     my $self = shift;
     $self->{output};
-}
-
-sub columns
-{
-    my $self = shift;
-
-    $self->{table}->columns;
-}
-
-sub attrib
-{
-     my $self = shift;
-
- warn $self->output;
- warn keys %{$self->output};
-
-if (my $href = $self->output->{html}) {
-warn 'HRef ', $href;
-     $href->{attributes} = {};
-     my $new_attributes = {
-	 %{$href->{attributes}},
-	 @_,
-     };
-     $href->{attributes} = $new_attributes;
-}
-
-     $self;
 }
 
 sub render

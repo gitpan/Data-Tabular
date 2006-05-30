@@ -14,11 +14,11 @@ sub new
     bless { @_ }, $class;
 }
 
-sub row_count
+sub _row_count
 {
     my $self = shift;
 
-    1;
+    die;
 }
 
 sub sum_list
@@ -37,18 +37,59 @@ sub sum
     }
     my $formula = '=SUM(';
     my $sum = 0;
+    my @rows;
     for my $row ($self->raw_rows) {
-	$sum = $row->get($column_name) + $sum;
-	$formula .= $row->id. ", $column_name, ";
+        push(@rows, $row->id());
+	my $next = $row->get($column_name);
+	if (UNIVERSAL::isa($next, 'Data::Tabular::Formula')) {
+	    $next = $next->{html};
+	}
+	$sum += $next;
     }
-    $formula .= ')';
-    $ret = {
+    require Data::Tabular::Formula;
+    $ret = bless {
         html => $sum,
-        xls => $formula,
-    };
-# FIXME : This needs to be a fancy type, so that Extra can add and subtract elements.
-    $ret = $sum;
+	type => 'sum',
+	column => $column_name,
+	rows => \@rows,
+    }, 'Data::Tabular::Formula';
+
     $self->{memo}->{$column_name} = $ret;
+    $ret;
+}
+
+sub avg
+{
+    my $self = shift;
+    my $column_name = shift;
+    my $ret;
+    if ($ret = $self->{memoa}->{$column_name}) {
+        return $ret;
+    }
+    my $formula = '=SUM(';
+    my $sum = 0;
+    my @rows;
+    my $count = 0;
+    for my $row ($self->raw_rows) {
+        push(@rows, $row->id());
+	my $next = $row->get($column_name);
+	if (UNIVERSAL::isa($next, 'Data::Tabular::Formula')) {
+	    $next = $next->{html};
+	}
+	$sum += $next;
+	$count++;
+    }
+    require Data::Tabular::Formula;
+
+    $ret = bless {
+        html => $sum / $count,
+	count => $count,
+	type => 'avg',
+	column => $column_name,
+	rows => \@rows,
+    }, 'Data::Tabular::Formula';
+
+    $self->{memoa}->{$column_name} = $ret;
     $ret;
 }
 
@@ -136,7 +177,6 @@ sub rows
 	pre_once => 0,
 	x => 'ok'
     };
-
     return $self->{rows} if $self->{rows};
 
     return unless $self->{data};
@@ -162,6 +202,7 @@ sub rows
 	    push(@ret, map({ $_->{row_id} = $rid++; $_->{output} = $info->{output}; $_ } ($value)));
 	}
     }
+
     $info->{x} = 'ok';
     if (my $action = $self->groups->[$self->level]->{post}) {
 	my $grouper = Data::Tabular::Group::Interface->new(

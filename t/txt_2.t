@@ -6,8 +6,6 @@ use_ok( 'Data::Tabular' );
 
 use Digest::MD5  qw(md5 md5_hex md5_base64);
 
-use Data::Dumper;
-
 our $t1;
 
 eval {

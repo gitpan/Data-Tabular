@@ -28,8 +28,6 @@ my $t1 = Data::Tabular->new(
     },
 );
 
-use Data::Dumper;
-
 is($t1->headers, 9, 'compare headers');
 is_deeply([ $t1->headers], [ 'animal', 'color', 'owner', 'jan', 'feb', 'amount', 'date', 'extra1', 'extra2' ], 'compare headers');
 

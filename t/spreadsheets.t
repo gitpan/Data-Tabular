@@ -26,8 +26,6 @@ my $t1 = Data::Tabular->new(
     },
 );
 
-use Data::Dumper;
-
 print $t1->txt;
 ok(1);
 

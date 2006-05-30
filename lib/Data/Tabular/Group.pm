@@ -7,6 +7,8 @@ use base 'Data::Tabular::Table::Extra';
 
 use Data::Tabular::Table::Group;
 
+use Carp qw (croak);
+
 sub clone
 {
     my $caller = shift;
@@ -117,13 +119,22 @@ sub _columns
     $self->table->columns;
 }
 
+sub row_count
+{
+    my $self = shift;
+
+    $self->{row_count} || die "row_count is not available until after rows is called.";
+}
+
 sub rows
 {
     my $self = shift;
+    my $args = { @_ };
 
     my $ret = $self->_doit(0, $self->SUPER::rows(@_));
 
     my @rows = $ret->rows(@_);
+    $self->{row_count} = scalar(@rows);
     @rows;
 }
 

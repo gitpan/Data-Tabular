@@ -4,8 +4,6 @@ use strict;
 
 package Data::Tabular::Output;
 
-use Time::HiRes qw ( gettimeofday tv_interval );
-
 use Carp qw (croak);
 
 use overload '""' => \&render;
@@ -32,17 +30,17 @@ sub rows
     $self->{table}->rows(output => $self->output);
 }
 
-sub output
-{
-    my $self = shift;
-    $self->{output};
-}
-
 sub columns
 {
     my $self = shift;
 
-    $self->{table}->columns;
+    $self->{table}->columns(output => $self->output);
+}
+
+sub output
+{
+    my $self = shift;
+    $self->{output};
 }
 
 sub attrib

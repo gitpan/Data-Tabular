@@ -3,9 +3,9 @@
 use strict;
 package Data::Tabular::Row::Averages;
 
-use base 'Data::Tabular::Row::Group';
+use base 'Data::Tabular::Row';
 
-use Carp qw(croak);
+use Carp qw(croak carp);
 
 use overload '@{}' => \&array,
              '""'  => \&str;
@@ -13,20 +13,10 @@ use overload '@{}' => \&array,
 sub new
 {
     my $class = shift;
-
-    my $inargs = { @_ };
-    my $outargs = { };
-    for my $arg  (qw( count text table sum_list extra )) {
-        die "$arg is required." unless defined $inargs->{$arg};
-	$outargs->{arg} = $inargs->{$arg};
-	delete $inargs->{$arg};
-    }
-    die 'Unknown arguments: ' . join(', ', keys(%{$inargs})) if keys(%{$inargs});
-
     my $self = $class->SUPER::new(@_);
 
-
     die unless $self->table;
+    die "Need sum_list" unless $self->{sum_list};
 
     $self;
 }
@@ -34,89 +24,105 @@ sub new
 sub str
 {
     my $self = shift;
+
     'Row::Averages';
-}
-
-sub _headers
-{
-    my $self = shift;
-die;
-    ('_description', @{$self->{sum_list} || []}, @{$self->{extra}->{headers} || []});
-}
-
-sub colspan
-{
-    my $self = shift;
-    my $col = shift;
-
-    if ($col eq '_description') {
-        1;
-    } else {
-	1;
-    }
 }
 
 sub cells
 {
     my $self = shift;
     my @ret = ();
-    my @headers = $self->headers;
+    my @headers = $self->headers();
+
     my $offset = 0;
     my $hash;
-    for my $x ( @{$self->{extra}->{headers} || []} ) {
-        $hash->{$x} = { type => 'extra' };
-    }
     for my $x ( @{$self->{sum_list} || []} ) {
-        $hash->{$x} = { type => 'sum' };
+        $hash->{$x} = { sum => 1 };
     }
 
-    my $start = 0;
-    for ($start = 0; $start <= $#headers; $start++) {
-        my $column_name = $headers[$start];
-	last unless $hash->{$column_name};
-    }
-    my $colspan = 1;
-    for (my $col = $start + 1; $col <= $#headers; $col++) {
-        my $column_name = $headers[$col];
-	last if $hash->{$column_name};
-        $colspan++;
-	if ($colspan > 1) {
-	    delete $headers[$col];
-	}
-    }
-
-    $headers[$start] = '_description';
-    $hash->{'_description'} = {
-       span => $colspan,
-    };
-
-    my $colspan = 1;
+    my $start;
     my $x = 0;
-    for (my $col = 0; $col <= $#headers; $col += $colspan || 1) {
-        my $column_name = $headers[$col];
-	$colspan = $hash->{$column_name}->{span};
-        push(@ret, 
+    my $state = 0;
+    my $cols = 1;
+    while (my $column_name = shift @headers) {
+        if ($state == 0) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => $column_name,
+			colspan => 1, 
+			id => $x,
+		    ),
+		);
+	    } else {
+		$state++;
+	    }
+	}
+	if ($state == 1) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => '_description',
+			colspan => $cols - 1, 
+			id => $x - ($cols - 1),
+		    ),
+		); 
+		$cols = 1;
+		$state++;
+	    } else {
+		$cols++;
+	    }
+	}
+	if ($state == 2) {
+	    if ($column_name && $hash->{$column_name} && $hash->{$column_name}->{sum}) {
+	        if ($cols > 1) {
+		    push(@ret,
+			Data::Tabular::Cell->new(
+			    row => $self,
+			    cell => '_filler',
+			    colspan => $cols - 1, 
+			    id => $x,
+			),
+		    ); 
+		    $cols = 1;
+		}
+		push(@ret,
+		    Data::Tabular::Cell->new(
+			row => $self,
+			cell => $column_name,
+			colspan => $cols, 
+			id => $x,
+		    ),
+		); 
+		$cols = 1;
+	    } else {
+	        $cols++;
+	    }
+	}
+	die if ($state >= 3);
+	$x++;
+    }
+    if ($cols > 1) {
+	push(@ret,
 	    Data::Tabular::Cell->new(
 		row => $self,
-		cell => $column_name,
-		colspan => $colspan,
-		id => $x,
-		hdr => 1,
-		align => 'right',
+		cell => '_filler',
+		colspan => $cols, 
+		id => $x - 1,
 	    ),
 	); 
-	$x += $colspan || 1;
+	$cols = 1;
     }
+die $cols if $cols > 1;
     @ret;
-}
-
-sub hdr {
-    1;
 }
 
 sub sum_list
 {
     my $self = shift;
+
     $self->{sum_list};
 }
 
@@ -130,36 +136,15 @@ sub get_column
     if ($column_name eq '_description') {
         $ret = $self->{text};
     } elsif (grep(m|$reg|, @{$self->sum_list})) {
-	$ret = 0;
-	my $count = 0;
-	for my $row ($self->table->raw_rows) {
-	   $ret += $row->get($column_name);
-	   $count++;
-	}
-	$ret /= $count;
-	$ret = sprintf('%3.2f', $ret);
+        $ret = $self->table->avg($column_name);
     } elsif (grep(m|$reg|, @{$self->{extra}->{headers} || []})) {
-
-       #$ret = join(':', keys %{$self}). ' -> '. $self->{table}->group->get_column($column_name);
-       $ret = $self->extra_column($self, $column_name);
-
+	$ret = "extra($column_name)";
+    } elsif ($column_name eq '_filler') {
+        $ret = undef;
     } else {
-        $ret = 'N/A';
+        $ret = 'N/A('. $column_name . ')';
     }
     $ret;
-}
-
-sub count
-{
-    my $self = shift;
-
-    $self->{count};
-}
-
-sub extra_package
-{
-    require Data::Tabular::Extra;
-    'Data::Tabular::Extra';
 }
 
 sub extra_column
@@ -188,10 +173,9 @@ sub extra_column
     $ret;
 }
 
-sub attributes
+sub hdr
 {
-    my $self = shift;
-    $self->[0];
+    1;
 }
 
 sub data
@@ -204,6 +188,7 @@ die;
 sub id
 {
     my $self = shift;
+
     $self->{row_id} || 'No ID available';
 }
 
@@ -211,20 +196,15 @@ sub cell_html_attributes
 {
     my $self = shift;
     my $cell = shift;
+
     {
         align => ($cell->name() eq '_description' ? 'left' : 'right'),
     };
 }
 
-sub xls_align
+sub type
 {
-    my $self = shift;
-    my $cell = shift;
-    $cell->name() eq '_description' ? 'left' : 'right';
-}
-
-sub type {
-    'averages';
+    'totals';
 }
 
 1;

@@ -89,7 +89,7 @@ sub extra_column
     my $row = shift;
     my $key = shift;
     my $ret = 'N/A';
-
+die;
     my $extra = $self->{extra};
 
     return undef unless $row;

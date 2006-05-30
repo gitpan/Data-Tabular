@@ -39,8 +39,11 @@ sub get_column
     my $row    = $self->{input_row};
 
     if ($self->table()->is_extra($column_name)) {
-        die "circulare reference for $column_name" if $self->{_working}->{$column_name}++;
+use Data::Dumper;
+        die "circulare reference for $column_name (" . join(' ', @{$self->{last}}) . ')' . Dumper $self . join(' ', caller) if $self->{_working}->{$column_name}++;
+	push(@{$self->{last}}, $column_name);
 	$ret = $self->extra_column($self, $column_name);
+	pop(@{$self->{last}});
         $self->{_working}->{$column_name} = 0;
     } else {
 	$ret = $self->table()->get_row_column_name($row, $column_name);

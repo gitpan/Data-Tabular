@@ -1,3 +1,9 @@
+0.25 May 30, 2006
+        - Added use of formulas for sum and average of rows and columns.
+	- More general clean up.
+
+0.24
+
 0.23
 	- Added more tests
 	- General clean up
