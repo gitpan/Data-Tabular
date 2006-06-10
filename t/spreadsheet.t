@@ -52,7 +52,7 @@ SKIP: {
     my $skip;
     eval { require Spreadsheet::WriteExcel; };
     $skip++ if $@;
-    skip 'Need Spreadsheet::WriteExcel', 1 if $skip;
+    skip 'Need Spreadsheet::WriteExcel', 3 if $skip;
     my $workbook = Spreadsheet::WriteExcel->new("/tmp/test2.xls");
     my $worksheet = $workbook->add_worksheet();
     my $output = $t1->output();
@@ -74,12 +74,12 @@ SKIP: {
     ok(ref($table) eq 'Data::Tabular::Group', 'table type');
 
     open(OUT, ">/tmp/test2.html");
-    print OUT $t1->html();
+    print OUT $t1->html(output => $output);
     close OUT;
 
-    is($table->row_count, 20);
+    is($table->row_count, 20, 'rows');
 
-    ok(1);
+    ok(1, 'html');
 }
 
 
@@ -89,7 +89,7 @@ SKIP: {
 	require Spreadsheet::ParseExcel;
     };
     $skip++ if $@;
-    skip 'Need Spreadsheet::ParseExcel', 1 if $skip;
+    skip 'Need Spreadsheet::ParseExcel', 5 if $skip;
     my $book = Spreadsheet::ParseExcel::Workbook->Parse("/tmp/test2.xls");
     my $worksheet = $book->{Worksheet}[0];
     is($worksheet->Cell(0, 0)->Value, 'First', 'First');
@@ -99,6 +99,6 @@ SKIP: {
     is($worksheet->Cell(17, 5)->Value, 90999);
     is($worksheet->Cell(18, 5)->Value, 8272.63636363636);
 
-    ok(1);
+    ok(1, 'xls');
 }
 

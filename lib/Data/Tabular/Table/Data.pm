@@ -102,7 +102,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Table::Data;
+Data::Tabular::Table::Data
 
 =head1 SYNOPSIS
 

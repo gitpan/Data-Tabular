@@ -38,7 +38,6 @@ t/csv.t
 t/Data-Tabular.t
 t/perl.xls
 t/pod.t
-t/spelling.t
 t/spreadsheet.t
 t/spreadsheets.t
 t/txt.t

@@ -94,11 +94,11 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output::HTML;
+Data::Tabular::Output::HTML
 
 =head1 SYNOPSIS
 
-This object is used by Data::Tabular to render an HTML table.
+This object is used by C<Data::Tabular> to render an HTML table.
 
 =head1 DESCRIPTION
 
@@ -129,6 +129,11 @@ It requires two arguments: a table and and an output object.
 
 This method returns a string that is an HTML table.
 
+=back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
+
 =cut
-1;
 

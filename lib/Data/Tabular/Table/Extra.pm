@@ -121,7 +121,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Table::Extra;
+Data::Tabular::Table::Extra
 
 =head1 SYNOPSIS
 

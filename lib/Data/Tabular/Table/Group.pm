@@ -221,7 +221,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Table::Group;
+Data::Tabular::Table::Group
 
 =head1 SYNOPSIS
 

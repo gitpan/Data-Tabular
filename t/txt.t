@@ -11,11 +11,15 @@ $table = Data::Tabular->new(
          ['a', 'b'],
          ['c', 'd']
     ],
-    extra_headers => [ 'three' ],
+    extra_headers => [ 'three', 'four' ],
     extra => {
-        'three' => sub {
+        'four' => sub {
 	    my $self = shift;
 	    $self->get('one') . $self->get('two');
+        },
+        'three' => sub {
+	    my $self = shift;
+	    join(' ', $self->get('one', 'two'));
         },
     },
     group_by => {
@@ -27,8 +31,11 @@ $table = Data::Tabular->new(
 	],
     },
     output => {
-	headers => [ 'three', 'one', 'two' ],
+	headers => [ 'four', 'three', 'one', 'two' ],
 	columns => {
+	   four => {
+	      title => "Four",
+	   },
 	   three => {
 	      title => "Three",
 	   },
@@ -46,9 +53,9 @@ our $new = $table->txt . '';
 our $old = <<EOP;
 
 First               
-Three               One (1)             Two (2)             
-ab                  a                   b                   
-cd                  c                   d                   
+Four                Three               One (1)             Two (2)             
+ab                  a b                 a                   b                   
+cd                  c d                 c                   d                   
 Last                
 EOP
 

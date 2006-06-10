@@ -49,11 +49,11 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output::TXT;
+Data::Tabular::Output::CSV
 
 =head1 SYNOPSIS
 
-This object is used by Data::Tabular to render a table in text format.
+This object is used by Data::Tabular to render a table in comma separated variable format.
 
 =head1 DESCRIPTION
 
@@ -61,7 +61,9 @@ This object is used by Data::Tabular to render a table in text format.
 
 =over 4
 
-=item new
+=item html
+
+This method returns a string that is an HTML table.
 
 =cut
 1;

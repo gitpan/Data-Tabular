@@ -8,7 +8,7 @@ use base qw(Data::Tabular::Output);
 
 use Carp qw (croak);
 
-use overload '""' => \&render;
+use overload '""' => \&_render;
 
 sub new
 {
@@ -25,13 +25,7 @@ sub new
     $self;
 }
 
-sub output
-{
-    my $self = shift;
-    $self->{output};
-}
-
-sub render
+sub _render
 {
     my $self = shift;
     $self->text;
@@ -71,7 +65,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output::TXT;
+Data::Tabular::Output::TXT
 
 =head1 SYNOPSIS
 
@@ -79,11 +73,25 @@ This object is used by Data::Tabular to render a table in text format.
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =over 4
 
 =item new
+
+Normally this object is constructed by the Data::Tabular::html method.
+
+It requires two arguments: a table and and an output object.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item text
+
+return a string that represents the table.
 
 =cut
 1;

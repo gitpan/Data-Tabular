@@ -21,20 +21,16 @@ sub new
     $self;
 }
 
-sub new_cell
-{
-    my $self = shift;
-    my $args = { @_ };
-
-    $args
-}
-
 sub get
 {
     my $self = shift;
-    my $column = shift;
 
-    $self->{row}->get_column($column);
+    if (wantarray) {
+	map({$self->{row}->get_column($_)} @_);
+    } else {
+        carp("only one column allowed in scalar context.") if @_ > 1;
+	$self->{row}->get_column(shift);
+    }
 }
 
 sub sum
@@ -74,11 +70,19 @@ sub average
     }, 'Data::Tabular::Formula';
 }
 
-sub row_id
+sub _row_id
 {
     my $self = shift;
 
     $self->{row}{row_id};
+}
+
+sub _new_cell
+{
+    my $self = shift;
+    my $args = { @_ };
+
+    $args
 }
 
 1;
@@ -90,7 +94,7 @@ Data::Tabular::Extra;
 
 =head1 SYNOPSIS
 
-This object is used by Data::Tabular to create `extra'
+This object is used by C<Data::Tabular> to create `extra'
 columns on a table.
 
 The subroutines in the `extra' section run under this package.
@@ -98,7 +102,7 @@ The subroutines in the `extra' section run under this package.
  ...
  extra => {
   'bob' => sub {
-    my $self = shift;   # this is an Data::Tabular::Extra object
+    my $self = shift;   # this is a Data::Tabular::Extra object
    }
  }
  ...
@@ -113,6 +117,16 @@ right.  Because of this you can use `extra' columns to create other
 extra columns.  This means that you should order the extra columns
 in the order that they need to be created in, and not in the the order
 that they will be shown in the output.
+
+=head2 Constructor
+
+=over 
+
+=item new()
+
+The user should never need to call the constructor.
+
+=back
 
 =head1 METHODS
 
@@ -135,3 +149,10 @@ Method to sum a set of columns. Given a list of column names this method returns
 the sum of those columns.  The type of the data returned is column type element,
 but must conform to the Data::Tabular::Type::Frac constructor.
 
+=back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
+
+=cut

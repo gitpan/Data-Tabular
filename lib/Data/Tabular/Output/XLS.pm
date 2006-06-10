@@ -34,27 +34,9 @@ sub new
         die 'Unknows arguments: ' . join(' ', sort @x_list);
     }
 
-    $self->render;
+    $self->_render;
 
     $self;
-}
-
-sub table
-{
-    my $self = shift;
-    $self->{table};
-}
-
-sub output
-{
-    my $self = shift;
-    $self->{output} or $self->table->output;
-}
-
-sub columns
-{
-    my $self = shift;
-    $self->{table}->columns;
 }
 
 sub workbook
@@ -81,14 +63,14 @@ sub col_offset
     $self->{col_offset};
 }
 
-sub get_col_id
+sub _get_col_id
 {
     my $self = shift;
 
     $self->output->col_id(shift);
 }
 
-sub render
+sub _render
 {
     my $self = shift;
 
@@ -253,14 +235,14 @@ next unless $cell_data;
 		my $formula = '=';
 		if ($cell_data->{type} eq 'sum') {
 		    if (!defined $cell_data->{rows}) {
-			$formula .= join('+', map({ my $x = $self->get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+			$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
 		    } else {
 			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
 		    }
 		} elsif ($cell_data->{type} eq 'average' || $cell_data->{type} eq 'avg') {
 		    $formula .= '(';
 		    if (!defined $cell_data->{rows}) {
-			$formula .= join('+', map({ my $x = $self->get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+			$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
 		    } else {
 			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
 		    }
@@ -291,7 +273,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output;
+Data::Tabular::Output::XLS
 
 =head1 SYNOPSIS
 
@@ -299,11 +281,49 @@ This object is used by Data::Tabular to render a table.
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =over 4
 
 =item new
 
-=cut
+Normally this object is constructed by the Data::Tabular::html method.
 
+It requires 4 arguments: a table, an output object, a workbook object
+and a worksheet object.
+
+The workbook should be a part of the worksheet.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item workbook
+
+  return the workbook
+
+=item worksheet
+
+  return the worksheet
+
+=item col_offset
+
+  return the column offset
+
+=item row_offset
+
+  return the row offset
+
+=back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
+
+=head1 SEE ALSO
+
+L<Spreadsheet::WriteExcel>
+
+=cut

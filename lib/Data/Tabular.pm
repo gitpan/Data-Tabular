@@ -3,7 +3,7 @@
 use strict;
 package Data::Tabular;
 
-our $VERSION = '0.25';
+our $VERSION = '0.26';
 
 use Carp qw (croak);
 
@@ -109,18 +109,6 @@ sub xls
     require Data::Tabular::Output::XLS;
 
     return Data::Tabular::Output::XLS->new(
-	table => $self->grouped,
-	output => $self->output,
-	@_,
-    );
-}
-
-sub _xml
-{
-    my $self = shift;
-    require Data::Tabular::Output::XML;
-
-    return Data::Tabular::Output::XML->new(
 	table => $self->grouped,
 	output => $self->output,
 	@_,

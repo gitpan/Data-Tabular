@@ -96,7 +96,7 @@ Data::Tabular::Group::Interface - Object that is passed into I<group_by> methods
        groups => [
           {
 	     pre => sub {
-	          my $self = shift;    # This is a C<Data::Tabular::Group::Interface> object
+	          my $self = shift;    # This is a Data::Tabular::Group::Interface object
 	     },
 	  }
        ],
@@ -104,8 +104,8 @@ Data::Tabular::Group::Interface - Object that is passed into I<group_by> methods
 
 =head1 DESCRIPTION
 
-Data::Tabular::Group::Interface is only used by the I<group_by> function of the
-Data::Tabuler package.
+C<Data::Tabular::Group::Interface> is only used by the I<group_by> function of the
+C<Data::Tabular> package.
 
 There are several 2 major groups of methods in this object: access
 methods and output methods. Access methods let the users groups methods
@@ -174,10 +174,10 @@ This method return a row with the columns listed in the I<sum array> summed.
 This is similar to the totals method, but each value is divided by the
 number of input rows before being output.
 
-This is
-
-=over
-
 =back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
 
 =cut

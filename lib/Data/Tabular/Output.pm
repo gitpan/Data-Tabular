@@ -43,6 +43,12 @@ sub output
     $self->{output};
 }
 
+sub table
+{
+    my $self = shift;
+    $self->{table};
+}
+
 sub attrib
 {
      my $self = shift;
@@ -74,18 +80,14 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Output;
+Data::Tabular::Output
 
 =head1 SYNOPSIS
 
-This object is used by Data::Tabular to render a table.
+This is the base class for the C<Data::Tabular> rendering objects.
 
-=head1 DESCRIPTION
+=head1 AUTHOR
 
-=head1 METHODS
-
-=over 4
-
-=item new
+"G. Allen Morris III" <gam3@gam3.net>
 
 =cut
