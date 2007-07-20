@@ -1,7 +1,8 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
-package Data::Tabular::Cell;
+package
+    Data::Tabular::Cell;
 
 use Carp qw(croak);
 
@@ -73,7 +74,7 @@ die 'XXXXX';
 #        $ret;
     }
 
-    length($ret) ? $ret : '&nbsp';	# This is wrong FIXME
+    length($ret) ? $ret : '&nbsp;';	# This is wrong FIXME
 }
 
 sub html_attribute_string
@@ -180,34 +181,18 @@ die 'XXXXX';
     $ret;
 }
 
-sub xls_align
+sub column_name
 {
     my $self = shift;
 
-    my $ret = $self->{row}->xls_align($self);
-    $ret;
+    $self->{cell};
 }
 
-sub raw_string
+sub type
 {
     my $self = shift;
 
-    my $ret = $self->{row}->get_column($self->{cell});
-    if (my $type = ref($ret)) {
-        if ($type eq 'HASH') {
-	    $ret = $ret->{html} || $ret->{text};
-        } elsif ($type eq 'ARRAY') {
-die 'XXXXX';
-	} else {
-	    if ($ret->can('xls_data')) {
-# we just use it;
-                $ret = $ret->xls_data();
-	    } else {
-# we just use it;
-	    }
-	}
-    }
-    defined $ret ? $ret : 'N/A';
+    $self->{type} || 'normal';
 }
 
 

@@ -1,7 +1,8 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
-package Data::Tabular::Row::Averages;
+package
+    Data::Tabular::Row::Averages;
 
 use base 'Data::Tabular::Row';
 
@@ -204,7 +205,7 @@ sub cell_html_attributes
 
 sub type
 {
-    'totals';
+    'averages';
 }
 
 1;

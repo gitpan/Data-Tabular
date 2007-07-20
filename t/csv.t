@@ -42,7 +42,7 @@ $table = Data::Tabular->new(
     },
 );
 
-our $new = $table->csv . '';
+our $new = $table->csv;
 our $old = <<EOP;
 
 First
@@ -52,5 +52,5 @@ Three,One (1),Two (2)
 Last
 EOP
 
-ok($new eq $old);
+ok($old eq $new);
 

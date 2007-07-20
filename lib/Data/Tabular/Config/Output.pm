@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 package Data::Tabular::Config::Output;
@@ -13,6 +13,16 @@ sub new
 
     $self->{xls} ||= {};
     $self->{html} ||= {};
+
+    if ($self->{titles}) {
+        for my $column (keys %{$self->{titles}}) {
+	    if ($self->{columns}{$column}{title} and $self->{columns}{$column}{title} ne $self->{titles}->{$column}) {
+use Data::Dumper;
+die Dumper $self;
+	    }
+            $self->{columns}{$column}{title} = $self->{titles}->{$column};
+	}
+    }
 
     die 'No column list' unless $self->column_list;
     $self;
@@ -95,7 +105,6 @@ sub html_attribute_string
     my $self = shift;
     my $attributes = {
         border => 1,
-	empty => '<br>',
     };
     my $na = $self->{html}->{attributes};
     for my $attribute (sort keys %$na) {
@@ -105,11 +114,7 @@ sub html_attribute_string
     my $ret = '';
     for my $attribute (sort keys %$attributes) {
         next unless $attributes->{$attribute};
-	if ($attributes->{$attribute} =~ m|^\d*$|) {
-	    $ret .= qq| $attribute=| . $attributes->{$attribute} . qq||;
-	} else {
-	    $ret .= qq| $attribute="| . $attributes->{$attribute} . qq|"|;
-	}
+	$ret .= qq| $attribute="| . $attributes->{$attribute} . qq|"|;
     }
 
     $ret;

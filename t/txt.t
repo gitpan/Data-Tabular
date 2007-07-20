@@ -52,12 +52,12 @@ $table = Data::Tabular->new(
 our $new = $table->txt . '';
 our $old = <<EOP;
 
-First               
-Four                Three               One (1)             Two (2)             
-ab                  a b                 a                   b                   
-cd                  c d                 c                   d                   
-Last                
+First
+Four  Three One (1) Two (2)
+ab    a b   a       b      
+cd    c d   c       d      
+Last 
 EOP
 
-ok($new eq $old);
+is($new, $old, 'output');
 

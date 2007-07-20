@@ -1,10 +1,23 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 
 package Data::Tabular::Output::CSV;
 
 use base "Data::Tabular::Output";
+
+use overload 'eq' => \&_eq;
+
+sub _eq
+{
+    my ($a, $b, $x) = @_;
+
+    if ($x) {
+	$a->text eq $b;
+    } else {
+        $a eq $b->text;
+    }
+}
 
 sub text
 {

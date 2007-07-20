@@ -1,7 +1,8 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
-package Data::Tabular::Row::Totals;
+package
+    Data::Tabular::Row::Totals;
 
 use base 'Data::Tabular::Row';
 
@@ -53,6 +54,7 @@ sub cells
 			cell => $column_name,
 			colspan => 1, 
 			id => $x,
+			type => 'sum',
 		    ),
 		);
 	    } else {
@@ -67,6 +69,7 @@ sub cells
 			cell => '_description',
 			colspan => $cols - 1, 
 			id => $x - ($cols - 1),
+			type => 'sum',
 		    ),
 		); 
 		$cols = 1;

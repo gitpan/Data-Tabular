@@ -18,9 +18,9 @@ my $builder = Module::Build->new(
 	'Spreadsheet::WriteExcel::Utility'	=> 0,
 	'Spreadsheet::ParseExcel'	=> 0,
     },
-    create_readme => 1,
-    sign           => 1,
+    create_readme      => 1,
+    sign               => 1,
     create_makefile_pl => 'traditional',
-    add_to_cleanup => [ 'Data-Tabular-*' ],
+    add_to_cleanup     => [ 'Data-Tabular-*' ],
 );
 $builder->create_build_script;

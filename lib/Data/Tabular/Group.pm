@@ -1,8 +1,10 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
  
-package Data::Tabular::Group;
+package
+    Data::Tabular::Group;
+
 use base 'Data::Tabular::Table::Extra';
 
 use Data::Tabular::Table::Group;
@@ -173,7 +175,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Group;
+Data::Tabular::Group
 
 =head1 SYNOPSIS
 

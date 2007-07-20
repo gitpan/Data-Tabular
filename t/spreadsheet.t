@@ -13,7 +13,7 @@ my $t1 = Data::Tabular->new(
 	[ 'cat', 'black', 'joey', 2, 3, 1.01, '2002-01-01T' ],
 	[ 'cat', 'white', 'jack', 3, 4, 1.01, '2002-01-01T' ],
 	[ 'cat', 'white', 'john', 4, 5, 1.01, '2002-01-01T' ],
-	[ 'bat', 'gray',  'john', 4, 5, -99999.99999999, '2002-01-01T' ],
+	[ 'bat', 'gray',  'john', 4, 5, -99999.99, '2002-01-01T' ],
 	[ 'bat', 'gray',  'john', 1, 1, 1, '2002-01-01T' ],
 	[ 'dog', 'white', 'john', 5, 6, 1.01, '2002-01-01T' ],
 	[ 'dog', 'white', 'joey', 6, 7, 1.01, '2002-01-01T' ],
@@ -62,7 +62,7 @@ SKIP: {
     $output->set_type(name => 'feb', type => 'number');
     $output->set_type(name => 'extra3', type => 'number');
     $output->set_type(name => 'extra4', type => 'number');
-    $output->set_type(name => 'amount', type => 'number');
+    $output->set_type(name => 'amount', type => 'dollar');
     $output->{headers} = [
 	'animal', 'color', 'owner', 'jan', 'feb', 'extra3', 'extra4', 'amount', 'extra1', 'extra2', 'date'
     ];
@@ -94,10 +94,26 @@ SKIP: {
     my $worksheet = $book->{Worksheet}[0];
     is($worksheet->Cell(0, 0)->Value, 'First', 'First');
 
+use Data::Dumper;
+warn $worksheet->Cell(3, 10)->Value();
+warn $worksheet->Cell(3, 10);
+warn $worksheet->Cell(3, 10)->{Val};
+warn $worksheet->Cell(3, 10)->{FormatNo};
+
+warn $worksheet->Cell(3, 7)->Value();
+warn $worksheet->Cell(3, 7);
+warn $worksheet->Cell(3, 7)->{Val};
+warn $worksheet->Cell(3, 7)->{FormatNo};
+
+warn $worksheet->Cell(3, 5)->Value();
+warn $worksheet->Cell(3, 5);
+warn $worksheet->Cell(3, 5)->{Val};
+warn $worksheet->Cell(3, 5)->{FormatNo};
+
     is($worksheet->Cell(3, 5)->Value, 3);
 
-    is($worksheet->Cell(17, 5)->Value, 90999);
-    is($worksheet->Cell(18, 5)->Value, 8272.63636363636);
+    is($worksheet->Cell(17, 5)->Value, '90,999');
+    is($worksheet->Cell(18, 5)->Value, '8,272.63636363636');
 
     ok(1, 'xls');
 }

@@ -1,7 +1,9 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
-package Data::Tabular::Table::Data;
+package
+    Data::Tabular::Table::Data;
+
 use base 'Data::Tabular::Table';
 
 use Carp qw (croak);
@@ -25,6 +27,13 @@ sub _row_count
     my $self = shift;
 
     scalar(@{$self->{data}->{rows}});
+}
+
+sub headers
+{
+    my $self = shift;
+
+    @{$self->{data}->{headers}};
 }
 
 sub all_headers
@@ -69,7 +78,6 @@ warn caller;
     }
 }
 
-
 sub row_package
 {
     require Data::Tabular::Row::Data;
@@ -102,7 +110,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Table::Data
+Data::Tabular::Table::Data - 
 
 =head1 SYNOPSIS
 
@@ -110,10 +118,47 @@ This object is used by Data::Tabular to hold a table.
 
 =head1 DESCRIPTION
 
-=head2 METHODS
+=head2 CONSTRUCTOR
 
 =over 4
 
 =item new
+
+=back
+
+=head2 METHODS
+
+=over 4
+
+=item rows
+
+=item get_row_column
+
+=item get_row_column_name
+
+=item row_count
+
+=item all_headers
+
+=item row_package
+
+=item headers
+
+=back
+
+=head1 AUTHOR
+
+"G. Allen Morris III" <gam3@gam3.net>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Data::Tabular>, L<Data::Tabular::Table>
 
 =cut

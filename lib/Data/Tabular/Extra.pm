@@ -1,7 +1,8 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
-package Data::Tabular::Extra;
+package
+    Data::Tabular::Extra;
 
 sub new
 {
@@ -63,14 +64,14 @@ sub average
 	$total += $self->{row}->get_column($column);
     }
     bless {
-	html => $total,
+	html => $total/$count,
 	count => $count,
 	columns => [ @_ ],
 	type => 'average',
     }, 'Data::Tabular::Formula';
 }
 
-sub _row_id
+sub row_id
 {
     my $self = shift;
 
@@ -90,7 +91,7 @@ __END__
 
 =head1 NAME
 
-Data::Tabular::Extra;
+Data::Tabular::Extra
 
 =head1 SYNOPSIS
 

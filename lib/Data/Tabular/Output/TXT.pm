@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 
@@ -40,18 +40,34 @@ sub text
 
     my @table;
 
+    my @col_length;
+
     for my $row ($self->rows()) {
-#        push(@table, " " . $row->id . " ");
 	for my $cell ($row->cells($output->headers)) {
             my $cell_data = $cell->html_string;
             my $width = 20; # $cell->width;
 	    $cell_data =~ s/^\s*(.*)\s*$/$1/;
-            push(@table, $cell_data);
-	    my $length = $width - length($cell_data);
-	    if ($length <=0) {
-	        $length = 1;
+	    if ((my $length = length($cell_data)) >= ($col_length[$cell->col_id] || 0)) {
+		$col_length[$cell->col_id] = $length;
 	    }
-	    push(@table, " " x $length);
+	}
+    }
+
+    my $right = 0;
+    for my $row ($self->rows()) {
+	for my $cell ($row->cells($output->headers)) {
+	    push(@table, " ") if $cell->col_id;
+            my $cell_data = $cell->html_string;
+            my $width = $col_length[$cell->col_id];
+	    $cell_data =~ s/^\s*(.*)\s*$/$1/;
+	    my $length = $width - length($cell_data);
+	    if ($right) {
+		push(@table, " " x $length);
+	    }
+            push(@table, $cell_data);
+	    if (!$right) {
+		push(@table, " " x $length);
+	    }
 	}
 	push(@table, "\n");
     }

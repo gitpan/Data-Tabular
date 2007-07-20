@@ -1,40 +1,30 @@
 ---
 name: Data-Tabular
-version: 0.26
+version: 0.27
 author:
   - '"G. Allen Morris III" <gam3@gam3.net>'
 abstract: Handy Table Manipulation and rendering Object
 license: perl
+resources:
+  license: http://dev.perl.org/licenses/
 requires:
   perl: 5.6.0
+build_requires:
+  Digest::MD5: 0
+  Test::More: 0
 recommends:
   Spreadsheet::ParseExcel: 0
   Spreadsheet::WriteExcel: 0
   Spreadsheet::WriteExcel::Simple: 0
   Spreadsheet::WriteExcel::Utility: 0
-build_requires:
-  Digest::MD5: 0
-  Test::More: 0
 provides:
   Data::Tabular:
     file: lib/Data/Tabular.pm
-    version: 0.26
-  Data::Tabular::Cell:
-    file: lib/Data/Tabular/Cell.pm
-  Data::Tabular::Column:
-    file: lib/Data/Tabular/Column.pm
+    version: 0.27
   Data::Tabular::Config::Extra:
     file: lib/Data/Tabular/Config/Extra.pm
   Data::Tabular::Config::Output:
     file: lib/Data/Tabular/Config/Output.pm
-  Data::Tabular::Extra:
-    file: lib/Data/Tabular/Extra.pm
-  Data::Tabular::Group:
-    file: lib/Data/Tabular/Group.pm
-  Data::Tabular::Group::Interface:
-    file: lib/Data/Tabular/Group/Interface.pm
-  Data::Tabular::Output:
-    file: lib/Data/Tabular/Output.pm
   Data::Tabular::Output::CSV:
     file: lib/Data/Tabular/Output/CSV.pm
   Data::Tabular::Output::HTML:
@@ -43,28 +33,9 @@ provides:
     file: lib/Data/Tabular/Output/TXT.pm
   Data::Tabular::Output::XLS:
     file: lib/Data/Tabular/Output/XLS.pm
-  Data::Tabular::Row:
-    file: lib/Data/Tabular/Row.pm
-  Data::Tabular::Row::Averages:
-    file: lib/Data/Tabular/Row/Averages.pm
-  Data::Tabular::Row::Data:
-    file: lib/Data/Tabular/Row/Data.pm
-  Data::Tabular::Row::Extra:
-    file: lib/Data/Tabular/Row/Extra.pm
-  Data::Tabular::Row::Group:
-    file: lib/Data/Tabular/Row/Group.pm
-  Data::Tabular::Row::Header:
-    file: lib/Data/Tabular/Row/Header.pm
-  Data::Tabular::Row::Titles:
-    file: lib/Data/Tabular/Row/Titles.pm
-  Data::Tabular::Row::Totals:
-    file: lib/Data/Tabular/Row/Totals.pm
   Data::Tabular::Table:
     file: lib/Data/Tabular/Table.pm
-  Data::Tabular::Table::Data:
-    file: lib/Data/Tabular/Table/Data.pm
-  Data::Tabular::Table::Extra:
-    file: lib/Data/Tabular/Table/Extra.pm
-  Data::Tabular::Table::Group:
-    file: lib/Data/Tabular/Table/Group.pm
-generated_by: Module::Build version 0.2611
+generated_by: Module::Build version 0.2807
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

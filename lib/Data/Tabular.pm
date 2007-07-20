@@ -1,9 +1,9 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 package Data::Tabular;
 
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 
 use Carp qw (croak);
 
@@ -56,6 +56,8 @@ sub new
 		title => $self->{title} || 1,
 		%$group_by
 	    );
+	} else {
+	    die "group_by data must be a hash.";
 	}
     } else {
 	$self->{grouped_table} = $self->{extra_table};
@@ -280,4 +282,16 @@ returns a comma separated representation of the table.
 
 "G. Allen Morris III" <gam3@gam3.net>
 
+=head1 COPYRIGHT
+
+Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Data::Tabular::Table>
+
 =cut
+

@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 
@@ -38,32 +38,46 @@ sub html
     my $self = shift;
 
     my $output = $self->output;
-    my $attributes = $self->output->html_attribute_string;
+    my $attributes = $output->html_attribute_string;
 
     $attributes .= '';
     my $ret = "<table$attributes>\n";
 
+    $ret .= " <colgroup>\n";
     for my $col ($self->columns()) {
         my $attribute = $col->align();
-#FIXME
-        $ret .= " <colgroup$attribute>\n";
+
+        $ret .= "  <col$attribute/>\n";
     }
+    $ret .= " </colgroup>\n";
     my @table;
     if ($output->table) {
+	push(@table, "<tr>\n");
 # FIX me -- it would be better to put a Title row on the top of the table.
 	for my $col ($self->columns()) {
+	    my $attributes = '';
 	    push(@table, "  <th$attributes>");
 	    push(@table, $col->name());
 	    push(@table, "</th>\n");
         }
+	push(@table, "</tr>\n");
     }
-
     for my $row ($self->rows()) {
 	my $attribute = $row->html_attribute_string();
         push(@table, " <tr$attribute>\n");
-#	push(@table, "<td>", ref $row, "</td>\n");
+
 	for my $cell ($row->cells()) {
-	    my $attributes = $cell->html_attribute_string;
+	    my $type = $self->output->type($cell->column_name);
+	    my $attributes = $cell->html_attribute_string || '';
+	    if ($type eq 'dollar' or $type eq 'number') {
+	        $attributes.= ' align="right"';
+	    }
+
+            if ($cell->type eq 'sum') {
+	        $attributes .= ' style="color: red;"';
+	    } else {
+	        $attributes .= '';
+	    }
 	    my $hdr = $cell->hdr;
 	    if ($hdr) {
 		push(@table, "  <th$attributes>");

@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2005, G. Allen Morris III, all rights reserved
+# Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
 
@@ -191,11 +191,12 @@ sub _render
 	        $cell_type = $cell->title_format;
 	    } elsif ($row->type eq 'averages') {
 	        $type = 'text';
-	        $cell_type = 'averages_' . $cell->xls_align($cell);
+	        $cell_type = 'averages_right';
 	    } elsif ($row->type eq 'header') {
 	    } elsif ($row->type eq 'totals') {
                 if (ref($cell_data)) {
 		    $type = 'formula';
+		    $cell_type = $self->output->type($cell->name);
 		}
 	    } else {
 		$type = $self->output->type($cell->name);
@@ -226,7 +227,7 @@ next unless $cell_data;
             } elsif ($type eq 'text') {
                 $worksheet->write_string($y, $x, $cell_data, $formats->{$cell_type});
             } elsif ($type eq 'dollar') {
-                $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+                $worksheet->write_number($y, $x, $cell_data, $formats->{'dollar'});
             } elsif ($type eq 'number') {
                 $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
             } elsif ($type eq 'percent') {
@@ -255,7 +256,7 @@ next unless $cell_data;
 		$formula .= '';
 		my $value = $cell_data->{html};
 		eval {
-                $worksheet->write_formula($y, $x, $formula, $formats->{$cell_type}, $value);
+		    $worksheet->write_formula($y, $x, $formula, $formats->{$cell_type}, $value);
 		};
 		if ($@) {
 		    die "$formula " . $@;

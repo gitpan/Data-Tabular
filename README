@@ -96,3 +96,12 @@ EXAMPLES
 AUTHOR
     "G. Allen Morris III" <gam3@gam3.net>
 
+COPYRIGHT
+    Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
+
+    This module is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+SEE ALSO
+    Data::Tabular::Table
+
