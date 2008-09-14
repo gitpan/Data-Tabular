@@ -5,7 +5,7 @@ use warnings;
 
 package Data::Tabular;
 
-our $VERSION = '0.28';
+our $VERSION = '0.29';
 
 use Carp qw (croak);
 
