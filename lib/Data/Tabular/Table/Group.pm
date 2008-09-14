@@ -28,7 +28,7 @@ sub sum_list
     $self->group->sum_list;
 }
 
-sub sum
+sub column_sum
 {
     my $self = shift;
     my $column_name = shift;
@@ -43,23 +43,25 @@ sub sum
         push(@rows, $row->id());
 	my $next = $row->get($column_name);
 	if (UNIVERSAL::isa($next, 'Data::Tabular::Formula')) {
+die;
 	    $next = $next->{html};
 	}
 	$sum += $next;
     }
-    require Data::Tabular::Formula;
-    $ret = bless {
-        html => $sum,
+    require Data::Tabular::Type::Formula;
+
+    $ret = Data::Tabular::Type::Formula->new(
+        data => $sum,
 	type => 'sum',
 	column => $column_name,
 	rows => \@rows,
-    }, 'Data::Tabular::Formula';
+    );
 
     $self->{memo}->{$column_name} = $ret;
     $ret;
 }
 
-sub avg
+sub column_average
 {
     my $self = shift;
     my $column_name = shift;
@@ -75,20 +77,21 @@ sub avg
         push(@rows, $row->id());
 	my $next = $row->get($column_name);
 	if (UNIVERSAL::isa($next, 'Data::Tabular::Formula')) {
+die;
 	    $next = $next->{html};
 	}
 	$sum += $next;
 	$count++;
     }
-    require Data::Tabular::Formula;
+    require Data::Tabular::Type::Formula;
 
-    $ret = bless {
-        html => $sum / $count,
+    $ret = Data::Tabular::Type::Formula->new(
+        data => $sum / $count,
 	count => $count,
 	type => 'avg',
 	column => $column_name,
 	rows => \@rows,
-    }, 'Data::Tabular::Formula';
+    );
 
     $self->{memoa}->{$column_name} = $ret;
     $ret;
@@ -98,6 +101,12 @@ sub group
 {
     my $self = shift;
     $self->{group};
+}
+
+sub headers
+{
+    my $self = shift;
+    $self->group->headers;
 }
 
 sub all_headers
@@ -145,8 +154,12 @@ sub get
     my $self = shift;
     my $key = shift;
 
-    my $ret = $self->{data}->[0]->get_column($key);
-    die "Bad Column $key"  unless $ret eq $self->{data}->[-1]->get_column($key);
+    my $ret  = $self->{data}->[0]->get_column($key);
+    my $ret1 = $self->{data}->[-1]->get_column($key);
+    unless ($ret->{data} eq $ret1->{data}) {
+use Data::Dumper;
+die Dumper $ret, $ret1;
+    }
 
     $ret;
 }

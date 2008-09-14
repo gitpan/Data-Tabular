@@ -57,11 +57,14 @@ API
         Get the output object.
 
   Accessor Methods
-    data
+    data_table
         The data method returns a Data::Table object.
 
-    extra
+    extra_table
         The extra method returns a Data::Table::Extra object.
+
+    grouped_table
+        The grouped method returns a Data::Table::Grouped object.
 
     grouped
         The grouped method returns a Data::Table::Grouped object.
@@ -87,8 +90,8 @@ EXAMPLES
      my $st = $dbh->prepare('Select * from my_test_table');
      my $data = selectall_arrayref($st);
      my $headers = $st->{NAMES}
- 
-     my $table = Data::Tabular->new(
+     
+ my $table = Data::Tabular->new(
          data => $data,
          headers => $headers,
      );
@@ -97,8 +100,9 @@ AUTHOR
     "G. Allen Morris III" <gam3@gam3.net>
 
 COPYRIGHT
-    Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
+    Copyright (C) 2003-2008, G. Allen Morris III, all rights reserved
 
+LICENSE
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
 

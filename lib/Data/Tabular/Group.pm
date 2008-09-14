@@ -68,7 +68,7 @@ sub compare
     my $row = shift;
     my $key = shift;
 
-    $first->get_column($key) ne $row->get_column($key);
+    $first->get_column($key)->string ne $row->get_column($key)->string;
 }
 
 sub _doit

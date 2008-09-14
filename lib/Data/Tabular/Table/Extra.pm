@@ -21,6 +21,7 @@ sub new
 sub extra
 {
     my $self = shift;
+
     $self->{extra};
 }
 
@@ -35,6 +36,7 @@ sub is_extra
 sub headers
 {
     my $self = shift;
+
     @{$self->{_all_headers}};
 }
 
@@ -55,6 +57,7 @@ sub row_package
 
 sub header_offset
 {
+die;
     my $self = shift;
     my $column = shift;
     my $count = 0;

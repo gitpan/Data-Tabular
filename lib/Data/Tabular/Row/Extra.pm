@@ -19,19 +19,6 @@ sub new
     $self;
 }
 
-sub html_attribute_string
-{
-    my $self = shift;
-    my $ret  = '';
-
-    if ($self->id % 2 == 0) {
-	$ret .= qq| class="ende"|;	# FIXME  get this data out of output config
-    } else {
-	$ret .= qq||;
-    }
-    $ret;
-}
-
 sub get_column
 {
     my $self = shift;
@@ -41,7 +28,6 @@ sub get_column
     my $row    = $self->{input_row};
 
     if ($self->table()->is_extra($column_name)) {
-use Data::Dumper;
         die "circulare reference for $column_name (" . join(' ', @{$self->{last}}) . ')' . Dumper $self . join(' ', caller) if $self->{_working}->{$column_name}++;
 	push(@{$self->{last}}, $column_name);
 	$ret = $self->extra_column($self, $column_name);
@@ -50,6 +36,8 @@ use Data::Dumper;
     } else {
 	$ret = $self->table()->get_row_column_name($row, $column_name);
     }
+
+    $ret = Data::Tabular::Type::Text->new(data => $ret);
 
     $ret;
 }
@@ -100,9 +88,20 @@ die	    $t;
 	} else {
 #	    $ret;
 	}
+    } else {
+        $ret = $self->set_type($ret, $key);
     }
     
     $ret;
+}
+
+sub set_type
+{
+    my $self = shift;
+    my $date = shift;
+    my $key = shift;
+
+    Data::Tabular::Type::Text->new(data => $date);
 }
 
 sub type

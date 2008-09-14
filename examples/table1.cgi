@@ -4,7 +4,7 @@ use strict;
 use CGI;
 
 #use lib '../blib/lib/';
-use lib '../lib/';
+#use lib '../lib/';
 
 use Data::Tabular;
 
@@ -92,8 +92,8 @@ eval {
     require Data::Tabular::Output::HTML;
 
     my $t0 = Data::Tabular::Output::HTML->new(
-	table => $t1->data,
-	output => $t1->output(headers => [ $t1->data->headers ]),
+	table => $t1->data_table,
+	output => $t1->output(headers => [ $t1->data_table->headers ]),
     );
     print $t0->html();
 };
@@ -106,8 +106,8 @@ eval {
     require Data::Tabular::Output::HTML;
 
     my $t0 = Data::Tabular::Output::HTML->new(
-	table => $t1->extra,
-	output => $t1->output(headers => [ $t1->extra->headers ]),
+	table => $t1->extra_table,
+	output => $t1->output(headers => [ $t1->extra_table->headers ]),
     );
     print $t0->html();
 };

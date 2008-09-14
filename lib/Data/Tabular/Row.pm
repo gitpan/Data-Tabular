@@ -22,6 +22,8 @@ sub new
     }
     $self = bless $self, $class;
 
+    die caller unless $self->table->headers;
+    croak 'need table' unless $self->table->headers;
     croak 'need table' unless $self->table;
 
     $self;
@@ -30,14 +32,25 @@ sub new
 sub str
 {
     my $self = shift;
-    'Row : '. $self->{input_row} .  join(':', $self->table->headers);
+    'Row : '. $self->{input_row} . ';';
 }
 
 sub headers
 {
     my $self = shift;
+    my @list1 = $self->table->headers;
+    my @list2 = $self->output->headers;
 
-    return $self->output->headers;
+    my %tmp;
+    
+    $tmp{$_} = 1 for (@list1);
+
+    my @list3 = grep({$tmp{$_}} @list2);
+
+warn 'bug' unless @list3;
+    return @list1 unless @list3;
+
+    return @list3;
 }
 
 sub html_attribute_string
@@ -52,6 +65,7 @@ sub cells
 {
     my $self = shift;
     my @ret = ();
+
     my @headers = $self->headers(@_);
 
     my $x = 0;

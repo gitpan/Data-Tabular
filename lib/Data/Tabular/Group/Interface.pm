@@ -43,6 +43,7 @@ sub titles
 {
     my $self = shift;
     require Data::Tabular::Row::Titles;
+
     Data::Tabular::Row::Titles->new(
 	@_,
 	table => $self->{group},

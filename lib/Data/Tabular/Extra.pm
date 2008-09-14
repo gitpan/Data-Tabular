@@ -42,15 +42,20 @@ sub sum
     for my $column (@_) {
 	my $data = $self->{row}->get_column($column);
 	if (ref($data) eq 'HASH') {
+die;
 	    $data = $data->{html};
 	}
+
 	$total += $data;
     }
-    bless {
-	html => $total,
+
+    require Data::Tabular::Type::Formula;
+
+    Data::Tabular::Type::Formula->new(
+	data => $total,
 	columns => [ @_ ],
 	type => 'sum',
-    }, 'Data::Tabular::Formula';
+    );
 }
 
 sub average
@@ -63,12 +68,14 @@ sub average
     for my $column (@_) {
 	$total += $self->{row}->get_column($column);
     }
-    bless {
-	html => $total/$count,
-	count => $count,
+
+    require Data::Tabular::Type::Formula;
+
+    Data::Tabular::Type::Formula->new(
+	data => $total / $count,
 	columns => [ @_ ],
 	type => 'average',
-    }, 'Data::Tabular::Formula';
+    );
 }
 
 sub row_id

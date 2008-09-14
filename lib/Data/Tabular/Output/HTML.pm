@@ -33,11 +33,32 @@ sub _render
     $self->html;
 }
 
+{
+    package Data::Tabular::_Type::Text;
+
+    sub new
+    {
+        my $class = shift;
+
+	bless {
+	    @_
+	}, $class;
+    }
+
+    sub html_text
+    {
+	my $self = shift;
+
+	sprintf($self->{format}, $self->{data});
+    }
+}
+
 sub html
 {
     my $self = shift;
 
     my $output = $self->output;
+
     my $attributes = $output->html_attribute_string;
 
     $attributes .= '';
@@ -51,43 +72,44 @@ sub html
     }
     $ret .= " </colgroup>\n";
     my @table;
-    if ($output->table) {
-	push(@table, "<tr>\n");
-# FIX me -- it would be better to put a Title row on the top of the table.
-	for my $col ($self->columns()) {
-	    my $attributes = '';
-	    push(@table, "  <th$attributes>");
-	    push(@table, $col->name());
-	    push(@table, "</th>\n");
-        }
-	push(@table, "</tr>\n");
-    }
+
     for my $row ($self->rows()) {
 	my $attribute = $row->html_attribute_string();
         push(@table, " <tr$attribute>\n");
 
 	for my $cell ($row->cells()) {
+	    my $data = $cell->data;
 	    my $type = $self->output->type($cell->column_name);
-	    my $attributes = $cell->html_attribute_string || '';
+            unless (ref $data) {
+warn "ASDF";
+		$data = Data::Tabular::Type::Text->new(
+		    data => '[' . $data . ']',
+		    format => $self->output->get_column_format($cell->column_name),
+		);
+	    }
+
+	    my $attributes = '';
+	    if (my $cs = $cell->colspan) {
+	        if ($cs > 1) {
+		    $attributes.= sprintf(' colspan="%s"', $cs);
+		}
+	    }
+
 	    if ($type eq 'dollar' or $type eq 'number') {
 	        $attributes.= ' align="right"';
 	    }
 
-            if ($cell->type eq 'sum') {
-	        $attributes .= ' style="color: red;"';
-	    } else {
-	        $attributes .= '';
-	    }
 	    my $hdr = $cell->hdr;
+$hdr = 0;
 	    if ($hdr) {
 		push(@table, "  <th$attributes>");
 	    } else {
 		push(@table, "  <td$attributes>");
 	    }
-            my $cell_data = $cell->html_string;
-#	    $cell_data =~ s/^\s*(.*)\s*$/$1/;
+            my $cell_data = $data->html_text;
+
 	    if (length($cell_data) == 0) {
-	       $cell_data = '<br>';
+		$cell_data = '<br>';
 	    }
             push(@table, $cell_data);
 	    if ($hdr) {

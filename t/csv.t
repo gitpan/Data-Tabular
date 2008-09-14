@@ -52,5 +52,7 @@ Three,One (1),Two (2)
 Last
 EOP
 
-ok($old eq $new);
+is($old, $new);
+
+
 

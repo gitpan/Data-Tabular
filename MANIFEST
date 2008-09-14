@@ -24,10 +24,13 @@ lib/Data/Tabular/Row/Group.pm
 lib/Data/Tabular/Row/Header.pm
 lib/Data/Tabular/Row/Titles.pm
 lib/Data/Tabular/Row/Totals.pm
+lib/Data/Tabular/Row/Function.pm
 lib/Data/Tabular/Table.pm
 lib/Data/Tabular/Table/Data.pm
 lib/Data/Tabular/Table/Extra.pm
 lib/Data/Tabular/Table/Group.pm
+lib/Data/Tabular/Type.pm
+lib/Data/Tabular/Type/Formula.pm 
 Makefile.PL
 MANIFEST
 META.yml
@@ -42,4 +45,5 @@ t/spreadsheet.t
 t/spreadsheets.t
 t/txt.t
 t/txt_2.t
+SIGNATURE    Added here by Module::Build
 SIGNATURE    Added here by Module::Build

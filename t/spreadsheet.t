@@ -73,10 +73,6 @@ SKIP: {
 
     ok(ref($table) eq 'Data::Tabular::Group', 'table type');
 
-    open(OUT, ">/tmp/test2.html");
-    print OUT $t1->html(output => $output);
-    close OUT;
-
     is($table->row_count, 20, 'rows');
 
     ok(1, 'html');
@@ -94,26 +90,10 @@ SKIP: {
     my $worksheet = $book->{Worksheet}[0];
     is($worksheet->Cell(0, 0)->Value, 'First', 'First');
 
-use Data::Dumper;
-warn $worksheet->Cell(3, 10)->Value();
-warn $worksheet->Cell(3, 10);
-warn $worksheet->Cell(3, 10)->{Val};
-warn $worksheet->Cell(3, 10)->{FormatNo};
-
-warn $worksheet->Cell(3, 7)->Value();
-warn $worksheet->Cell(3, 7);
-warn $worksheet->Cell(3, 7)->{Val};
-warn $worksheet->Cell(3, 7)->{FormatNo};
-
-warn $worksheet->Cell(3, 5)->Value();
-warn $worksheet->Cell(3, 5);
-warn $worksheet->Cell(3, 5)->{Val};
-warn $worksheet->Cell(3, 5)->{FormatNo};
-
     is($worksheet->Cell(3, 5)->Value, 3);
 
-    is($worksheet->Cell(17, 5)->Value, '90,999');
-    is($worksheet->Cell(18, 5)->Value, '8,272.63636363636');
+    is($worksheet->Cell(17, 5)->Value, '90999');
+    is($worksheet->Cell(18, 5)->Value, '8272.63636363636');
 
     ok(1, 'xls');
 }

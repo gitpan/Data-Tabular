@@ -150,6 +150,38 @@ sub type
     $self->{types}->{$name} || 'text';
 }
 
+sub set_column_format
+{
+    my $self = shift;
+    my %args = @_;
+
+    for my $key (keys %args) {
+	$self->{format}{$key} = $args{$key};
+    }
+}
+
+sub get_column_format
+{
+    my $self = shift;
+    my $column = shift or die 'need name';
+
+    $self->{format}{$column} || '%s';
+}
+
+sub format
+{
+    'bob';
+}
+
+sub set_use_functions
+{
+    warn "set_use_functions";
+}
+
+sub get_use_functions
+{
+    warn "get_use_functions";
+}
 
 1;
 __END__

@@ -1,9 +1,11 @@
 # Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
 
 use strict;
+use warnings;
+
 package Data::Tabular;
 
-our $VERSION = '0.27';
+our $VERSION = '0.28';
 
 use Carp qw (croak);
 
@@ -23,6 +25,7 @@ sub new
     my $extra  = Data::Tabular::Config::Extra->new(
 	headers => $self->{extra_headers}, 
 	columns => $self->{extra}, 
+	types => $self->{extra_types}, 
     );
 
     if (ref($caller)) {
@@ -42,6 +45,7 @@ sub new
 	    data => bless({
 		headers => $self->{headers},
 		rows    => $self->{data},
+		types   => $self->{types},
 	    }, 'Data::Tabular::Data'),
 	);
     $self->{extra_table} =
@@ -49,6 +53,7 @@ sub new
             table => $self->{data_table},
 	    extra => $extra,
 	);
+    $self->{group_by} ||= {};
     if (my $group_by = $self->{group_by}) {
         if (ref $group_by eq 'HASH') {
 	    $self->{grouped_table} = Data::Tabular::Group->new(
@@ -60,6 +65,7 @@ sub new
 	    die "group_by data must be a hash.";
 	}
     } else {
+die "FIXME";
 	$self->{grouped_table} = $self->{extra_table};
     }
     $self;
@@ -90,6 +96,20 @@ sub grouped
     my $self = shift;
 
     $self->{grouped_table};
+}
+
+sub extra_table
+{
+    my $self = shift;
+
+    $self->{extra_table};
+}
+
+sub data_table
+{
+    my $self = shift;
+
+    $self->{data_table};
 }
 
 sub html
@@ -222,13 +242,17 @@ Get the output object.
 
 =over
 
-=item data
+=item data_table
 
 The data method returns a Data::Table object.
 
-=item extra
+=item extra_table
 
 The extra method returns a Data::Table::Extra object.
+
+=item grouped_table
+
+The grouped method returns a Data::Table::Grouped object.
 
 =item grouped
 
@@ -284,7 +308,9 @@ returns a comma separated representation of the table.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003-2007, G. Allen Morris III, all rights reserved
+Copyright (C) 2003-2008, G. Allen Morris III, all rights reserved
+
+=head1 LICENSE
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

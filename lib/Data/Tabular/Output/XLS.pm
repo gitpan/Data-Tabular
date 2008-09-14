@@ -182,89 +182,20 @@ sub _render
 	    }
 	}
 	for my $cell ($row->cells()) {
-	    my ($y, $x, $cell_data, $type) = ($cell->row_id, $cell->col_id, $cell->xls_string, $cell->xls_type);
-	    my $cell_type = $type;
-	    if ($row->hdr) {
-	        $cell_type .= '_hdr';
-	    }
-	    if ($row->type eq 'title') {
-	        $cell_type = $cell->title_format;
-	    } elsif ($row->type eq 'averages') {
-	        $type = 'text';
-	        $cell_type = 'averages_right';
-	    } elsif ($row->type eq 'header') {
-	    } elsif ($row->type eq 'totals') {
-                if (ref($cell_data)) {
-		    $type = 'formula';
-		    $cell_type = $self->output->type($cell->name);
-		}
-	    } else {
-		$type = $self->output->type($cell->name);
-	    }
-next unless $cell_data;
-	    my $format = undef;
-
-	    if (ref($cell_data)) {
-# FIXME
-		$type = 'formula';
-	    }
-
-            if ($type eq 'date') {
-                if ($cell_data) {
-                    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'date'});
-		    $worksheet->set_column($x, $x, 20);
-                }
-            } elsif ($type eq 'time') {
-                if ($cell_data) {
-                    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'time'});
-		    $worksheet->set_column($x, $x, 23);
-                }
-            } elsif ($type eq 'month') {
-                my $date_data = $cell_data;
-                if ($cell_data) {
-                    $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
-                }
-            } elsif ($type eq 'text') {
-                $worksheet->write_string($y, $x, $cell_data, $formats->{$cell_type});
-            } elsif ($type eq 'dollar') {
-                $worksheet->write_number($y, $x, $cell_data, $formats->{'dollar'});
-            } elsif ($type eq 'number') {
-                $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
-            } elsif ($type eq 'percent') {
-                $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
-            } elsif ($type eq 'formula') {
-		my $formula = '=';
-		if ($cell_data->{type} eq 'sum') {
-		    if (!defined $cell_data->{rows}) {
-			$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
-		    } else {
-			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
-		    }
-		} elsif ($cell_data->{type} eq 'average' || $cell_data->{type} eq 'avg') {
-		    $formula .= '(';
-		    if (!defined $cell_data->{rows}) {
-			$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
-		    } else {
-			$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
-		    }
-		    $formula .= ')';
-		    $formula .= "/" . scalar(@{$cell_data->{rows} || $cell_data->{columns}});
+	    my ($y, $x) = ($cell->row_id, $cell->col_id);
+	    my $data = $cell->data;
+	    my $formula = '';
+	    my $value = 'asdf';
+	    eval {
+		if (ref $data) {
+		    $worksheet->write($y, $x, $data->string);
 		} else {
-		    die $cell_data->{type};
+		    $worksheet->write($y, $x, $data);
 		}
-
-		$formula .= '';
-		my $value = $cell_data->{html};
-		eval {
-		    $worksheet->write_formula($y, $x, $formula, $formats->{$cell_type}, $value);
-		};
-		if ($@) {
-		    die "$formula " . $@;
-		}
-            } else {
-                warn "Unknown type $type";
-                $worksheet->write($y, $x, 'unknows type ' . $cell_data);
-            }
+	    };
+	    if ($@) {
+		die "$formula " . $@;
+	    }
 	}
     }
 }
@@ -328,3 +259,77 @@ The workbook should be a part of the worksheet.
 L<Spreadsheet::WriteExcel>
 
 =cut
+
+my $cell_type = $type;
+    if ($row->hdr) {
+	$cell_type .= '_hdr';
+    }
+    if ($row->type eq 'title') {
+	$cell_type = $cell->title_format;
+    } elsif ($row->type eq 'averages') {
+	$type = 'text';
+	$cell_type = 'averages_right';
+    } elsif ($row->type eq 'header') {
+    } elsif ($row->type eq 'totals') {
+	if (ref($cell_data)) {
+	    $type = 'formula';
+	    $cell_type = $self->output->type($cell->name);
+	}
+    } else {
+	$type = $self->output->type($cell->name);
+    }
+next unless $cell_data;
+    my $format = undef;
+
+    if (ref($cell_data)) {
+# FIXME
+	$type = 'formula';
+    }
+
+    if ($type eq 'date') {
+	if ($cell_data) {
+	    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'date'});
+	    $worksheet->set_column($x, $x, 20);
+	}
+    } elsif ($type eq 'time') {
+	if ($cell_data) {
+	    $worksheet->write_date_time($y, $x, $cell_data, $formats->{'time'});
+	    $worksheet->set_column($x, $x, 23);
+	}
+    } elsif ($type eq 'month') {
+	my $date_data = $cell_data;
+	if ($cell_data) {
+	    $worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+	}
+    } elsif ($type eq 'text') {
+	$worksheet->write_string($y, $x, $cell_data, $formats->{$cell_type});
+    } elsif ($type eq 'dollar') {
+	$worksheet->write_number($y, $x, $cell_data, $formats->{'dollar'});
+    } elsif ($type eq 'number') {
+	$worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+    } elsif ($type eq 'percent') {
+	$worksheet->write_number($y, $x, $cell_data, $formats->{$cell_type});
+    } elsif ($type eq 'formula') {
+	my $formula = '=';
+	if ($cell_data->{type} eq 'sum') {
+	    if (!defined $cell_data->{rows}) {
+		$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+	    } else {
+		$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
+	    }
+	} elsif ($cell_data->{type} eq 'average' || $cell_data->{type} eq 'avg') {
+	    $formula .= '(';
+	    if (!defined $cell_data->{rows}) {
+		$formula .= join('+', map({ my $x = $self->_get_col_id($_); chr(0x41+$x) . ($cell->row_id+1); } @{$cell_data->{columns}}));
+	    } else {
+		$formula .= join('+', map({ chr(0x41+$cell->col_id) . $_; } @{$cell_data->{rows}}));
+	    }
+	    $formula .= ')';
+	    $formula .= "/" . scalar(@{$cell_data->{rows} || $cell_data->{columns}});
+	} else {
+	    warn $cell_data->{type};
+	}
+
+	$formula = '';
+	$formula .= '';
+	my $value = $cell_data->{html};

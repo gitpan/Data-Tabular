@@ -22,12 +22,6 @@ sub new
     $self;
 }
 
-sub title_format
-{
-    my $self = shift;
-    $self->row->output->xls_title_format($self->name) || 'title_center';
-}
-
 sub row_id
 {
     my $self = shift;
@@ -44,6 +38,15 @@ sub row
 {
     my $self = shift;
     $self->{row};
+}
+
+sub data
+{
+    my $self = shift;
+
+    my $ret = $self->{row}->get_column($self->{cell});
+
+    return $ret;
 }
 
 sub str
@@ -77,6 +80,15 @@ die 'XXXXX';
     length($ret) ? $ret : '&nbsp;';	# This is wrong FIXME
 }
 
+sub colspan
+{
+    my $self = shift;
+
+    my $colspan = $self->{colspan};
+
+    return $colspan;
+}
+
 sub html_attribute_string
 {
     my $self = shift;
@@ -84,7 +96,7 @@ sub html_attribute_string
     my $header = $self->{cell};
     my $data = $self->{row}->get_column($self->{cell});
     my $colspan = $self->{colspan};
-
+warn join ' ', caller;
     my $attributes = $row->cell_html_attributes($self);
 
     if ($colspan > 1) {

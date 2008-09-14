@@ -42,9 +42,10 @@ sub text
 
     my @col_length;
 
-    for my $row ($self->rows()) {
+    for my $row ($self->rows(output => $self->output)) {
 	for my $cell ($row->cells($output->headers)) {
-            my $cell_data = $cell->html_string;
+            my $cell_data = $cell->data;
+
             my $width = 20; # $cell->width;
 	    $cell_data =~ s/^\s*(.*)\s*$/$1/;
 	    if ((my $length = length($cell_data)) >= ($col_length[$cell->col_id] || 0)) {
@@ -54,8 +55,8 @@ sub text
     }
 
     my $right = 0;
-    for my $row ($self->rows()) {
-	for my $cell ($row->cells($output->headers)) {
+    for my $row ($self->rows(output => $self->output)) {
+	for my $cell ($row->cells()) {
 	    push(@table, " ") if $cell->col_id;
             my $cell_data = $cell->html_string;
             my $width = $col_length[$cell->col_id];

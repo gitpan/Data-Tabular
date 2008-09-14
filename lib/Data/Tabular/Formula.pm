@@ -3,19 +3,10 @@ use strict;
 package 
     Data::Tabular::Formula;
 
-use overload '""' => \&_value;
-
-sub attributes
-{
-   {};
-}
-
-sub _value
+sub html_text
 {
     my $self = shift;
 
-use Data::Dumper;
-#die 'XXXX ', Dumper $self if $self->{type} ne 'sum';
     $self->{html};
 }
 

@@ -6,6 +6,8 @@ package
 
 use base 'Data::Tabular::Table';
 
+use Data::Tabular::Type;
+
 use Carp qw (croak);
 
 sub new
@@ -52,11 +54,22 @@ sub get_row_column
     my $row = shift;
     my $column = shift;
     my $count = scalar(@{$self->{data}->{headers}});
+    my $ret;
     if ($column >= $count) {
-        'boB';
+warn caller;
+        $ret = 'Column too great';
     } else {
-	$self->{data}->{rows}->[$row][$column];
+	$ret = $self->{data}->{rows}->[$row][$column];
     }
+
+    if (my $type = $self->{data}->{types}[$column]) {
+        unless (ref $ret) {
+	    $type = "Data::Tabular::Type::$type";
+	    $ret = bless({ data => $ret }, $type);
+        }
+    }
+
+    return $ret;
 }
 
 sub get_row_column_name
@@ -66,21 +79,32 @@ sub get_row_column_name
     my $column_name = shift;
     my $count = scalar(@{$self->{data}->{headers}});
     my $column;
+    my $ret;
+
     for ($column = 0; $column < $count; $column++) {
         last if $self->{data}->{headers}->[$column] eq $column_name;
     }
 
     if ($column >= $count) {
-warn caller;
-        'Unknown Column '. $column_name;
+        $ret = 'Unknown Column '. $column_name;
     } else {
-	$self->{data}->{rows}->[$row][$column];
+	$ret = $self->{data}->{rows}->[$row][$column];
     }
+
+    if (my $type = $self->{data}->{types}[$column]) {
+        unless (ref $ret) {
+	    $type = "Data::Tabular::Type::$type";
+	    $ret = bless({ data => $ret }, $type);
+        }
+    }
+
+    return $ret;
 }
 
 sub row_package
 {
     require Data::Tabular::Row::Data;
+
    'Data::Tabular::Row::Data';
 }
 
@@ -89,6 +113,8 @@ sub rows
     my $self = shift;
     my $args = { @_ };
     my @ret;
+
+    die 'Need output' unless $args->{output};
 
     for (my $row = 0; $row < $self->_row_count; $row++) {
 	push(@ret, $self->row_package->new(
@@ -101,7 +127,6 @@ sub rows
     }
 
     $self->{rows} = \@ret;
-
     wantarray ? @{$self->{rows}} : $self->{rows};
 }
 

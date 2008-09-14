@@ -43,7 +43,11 @@ sub get_column
     my $self = shift;
     my $column_name = shift;
     die 'unknown column ' . $column_name unless $column_name eq '_header';
-    $self->{text};
+
+    Data::Tabular::Type::Text->new(
+	data => $self->{text},
+	type => 'header',
+    );
 }
 
 sub hdr
